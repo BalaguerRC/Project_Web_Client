@@ -55,7 +55,7 @@ const Home = () => {
     }, [carritoNumber])
     return <div>
         <header>
-            <AppBar position="fixed">
+            <AppBar position="fixed" variant="outlined">
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
                         <Typography
@@ -209,7 +209,7 @@ const Home = () => {
         </Grid>
 
         <footer>
-            <Box sx={{ textAlign: "center" }}>
+            <Box sx={{ textAlign: "center", height: "100%"}}>
                 <Typography variant="h7">
                     Copyright © 2023 - All right reserved by NOTHING
                 </Typography>

@@ -46,7 +46,7 @@ const Details = () => {
         console.log(Product.image)
     }, [])
 
-    const navigate=useNavigate();
+    const navigate = useNavigate();
 
     const AddCarrito = async (data) => {
         await AddCar(data);
@@ -59,9 +59,7 @@ const Details = () => {
                 justifyContent="center"
                 alignItems="center">
                 <Container fixed>
-                    <Button variant='contained' onClick={()=>navigate("/products")}>
-                        {"<-Back"}
-                    </Button>
+
                     <Typography variant="h5" gutterBottom>Productos</Typography>
 
                     <Breadcrumbs separator=">" aria-label="breadcrumb">
@@ -78,17 +76,21 @@ const Details = () => {
 
                     <Divider />
 
-                    <Box marginTop={10}>
+                    <Button variant='contained' onClick={() => navigate("/products")}>
+                        {"<-Back"}
+                    </Button>
+
+                    <Box marginTop={5}>
                         <Paper
                             sx={{
                                 justifyContent: "center",
                                 p: 4,
                                 margin: "auto",
-                                maxWidth: 900,
+                                maxWidth: 1000,
                                 flexGrow: 1,
-                                backgroundColor: (theme) =>
-                                    theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                                backgroundColor: "#2b3246"
                             }}
+                            variant="outlined"
                         >
                             <Grid container spacing={3} justifyContent={"center"}>
                                 <Grid item marginRight={1.8}>

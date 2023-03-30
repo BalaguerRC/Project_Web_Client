@@ -37,8 +37,8 @@ const HomeView = () => {
             </Grid>
         </Box>
 
-        <Box sx={{ backgroundColor: "#265c66", p: 7, margin: "auto", flexGrow: 1 }}>
-            <Grid container spacing={3} direction={"row"} alignItems="center" justifyContent="flex-end">
+        {/*<Box sx={{ backgroundColor: "#265c66", p: 7, margin: "auto", flexGrow: 1 }}>
+            <Grid container spacing={3} direction={"row"} alignItems="center" justifyContent="center">
                 <Grid item marginRight={1.8}>
                     <Box sx={{ maxWidth: 488, maxHeight: 328, paddingTop: 2 }}>
                         <Typography variant="h4" gutterBottom>Productos</Typography>
@@ -56,6 +56,22 @@ const HomeView = () => {
                     </Grid>
                 </Grid>
             </Grid>
+</Box >*/}
+        <Box sx={{ backgroundColor: "#265c66", flexGrow: 1 }}>
+            <Box sx={{ justifyContent: "center", alignItems: "center", p: 7, margin: "auto", maxWidth: 1100,}}>
+
+                <Grid container spacing={5}>
+                    <Grid item marginRight={1.8}>
+                        <Box sx={{ maxWidth: 488, maxHeight: 328, paddingTop: 2 }}>
+                            <Typography variant="h4" gutterBottom>Productos</Typography>
+                            <Typography variant="subtitle1" gutterBottom>Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</Typography>
+                        </Box>
+                    </Grid>
+                    <Grid item xs sm container>
+                    <ImageProduct />
+                    </Grid>
+                </Grid>
+            </Box >
         </Box >
 
         <Box sx={{ justifyContent: "center", alignItems: "center", p: 7, margin: "auto", maxWidth: 1100, flexGrow: 1, }}>

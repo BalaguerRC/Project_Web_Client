@@ -1,4 +1,4 @@
-import { Box, Breadcrumbs, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Container, Divider, Grid, Link, Pagination, Paper, Skeleton, styled, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Chip, Container, Divider, Grid, Link, Pagination, Paper, Skeleton, Stack, styled, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link as LinkRouter, useNavigate } from "react-router-dom";
 
@@ -52,7 +52,7 @@ const Products = () => {
                         <Grid container item spacing={5}>
                             {Product && Product.map((item, value) => {
                                 return <Grid item xs={6} md={3} key={item.id}>
-                                    <Card sx={{ maxWidth: 345, minWidth: 100 }}>
+                                    <Card sx={{ maxWidth: 345, minWidth: 100, backgroundColor: "#2b3246" }} variant="outlined">
                                         <CardActionArea onClick={() => navigate("/products/details/" + item.id)}>
                                             <CardMedia
                                                 component="img"
@@ -64,6 +64,13 @@ const Products = () => {
                                                 <Typography variant="button" color="text.primary">
                                                     {item.name}
                                                 </Typography>
+                                                <Divider />
+                                                <Typography gutterBottom variant="body2">
+                                                    Categoria:
+                                                </Typography>
+                                                <Stack direction="row" spacing={1}>
+                                                    <Chip label={item.category} color="primary"/>
+                                                </Stack>
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions>
