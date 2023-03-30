@@ -18,6 +18,9 @@ function App() {
   const darkTheme = createTheme({
     palette: {
       mode: 'dark',
+      background:{
+        default: "#1d212c"
+      }
     },
   });
   const router = createBrowserRouter([
