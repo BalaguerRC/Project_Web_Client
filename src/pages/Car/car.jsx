@@ -1,7 +1,8 @@
 import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid, List, ListItem, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export const Carrito = []
+export const Carrito = JSON.parse(localStorage.getItem("Carrito")) || [];
 
 const Car = () => {
 
@@ -9,11 +10,13 @@ const Car = () => {
 
     const [carrito2, setCarrito] = useState([])
 
-    const getCarrito = JSON.parse(localStorage.getItem("Carrito"))
+
 
     //console.log(getCarrito)
 
     const response = () => {
+        const getCarrito = JSON.parse(localStorage.getItem("Carrito"))
+        //localStorage.setItem("Carrito", getCarrito)
         setCarrito(getCarrito)
         console.log(carrito2)
     }
@@ -22,6 +25,8 @@ const Car = () => {
         response()
         //console.log("Carrito :"+carrito2)
     }, [])
+
+    const navigate = useNavigate();
 
 
     return <>
@@ -33,11 +38,12 @@ const Car = () => {
                 justifyContent="center"
 
                     /*spacing={2}*/>
+                Cantidad: {Carrito.length}
                 <Grid container item spacing={5}>
                     {carrito2 && carrito2.map((item, value) => {
                         return <Grid item xs={6} md={3} key={item.id}>
                             <Card sx={{ maxWidth: 345, minWidth: 100 }}>
-                                <CardActionArea>
+                                <CardActionArea onClick={() => navigate("/products/details/" + item.id)}>
                                     <CardMedia
                                         component="img"
                                         height="140"
@@ -59,7 +65,6 @@ const Car = () => {
                         </Grid>
                     })}
 
-                    
                 </Grid>
             </Box>
         </Grid>
@@ -69,8 +74,7 @@ const Car = () => {
 export default Car;
 
 export const AddCar = (data) => {
-    //const newData= {}
     Carrito.push(data)
-    //console.log(Carrito)
+    console.log(Carrito)
     localStorage.setItem("Carrito", JSON.stringify(Carrito))
 }

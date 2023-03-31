@@ -11,6 +11,7 @@ import Products from './pages/Products/products'
 import Details from './pages/Products/details'
 import Login from './pages/auth/login'
 import Car from "./pages/Car/car"
+import Profile from './pages/auth/profile'
 
 function App() {
   //const [count, setCount] = useState(0)
@@ -18,7 +19,7 @@ function App() {
   const darkTheme = createTheme({
     palette: {
       mode: 'dark',
-      background:{
+      background: {
         default: "#1d212c"
       }
     },
@@ -30,31 +31,36 @@ function App() {
       children: [
         {
           index: true,
-          element: <HomeView/>
+          element: <HomeView />
         },
         {
           path: "products",
           children: [
             {
               index: true,
-              element: <Products/>,
-              
+              element: <Products />,
+
             },
             {
               path: "details/:id",
-              element: <Details/>
+              element: <Details />
             }
           ]
         },
         {
           path: "carrito",
           element: <Car />
-        }
+        },
+
+        {
+          path: "profile",
+          element: <Profile />
+        },
       ]
     },
     {
       path: "login",
-      element: <Login/>
+      element: <Login />
     },
     {
       path: "*",
@@ -64,7 +70,7 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <RouterProvider router={router}/>
+      <RouterProvider router={router} />
     </ThemeProvider>
   )
 }
