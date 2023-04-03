@@ -1,7 +1,8 @@
-import { Alert, Autocomplete, Box, Breadcrumbs, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Chip, Container, Divider, Grid, IconButton, Link, Pagination, Paper, Skeleton, Snackbar, Stack, styled, TextField, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Alert, Box, Breadcrumbs, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Chip, Container, Divider, FormControl, Grid, IconButton, InputLabel, Link, MenuItem, Pagination, Paper, Select, Skeleton, Snackbar, Stack, styled, TextField, Typography } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
 import { Link as LinkRouter, useNavigate } from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search';
+import Autocomplete from "@mui/material/Autocomplete"
 
 const Products = () => {
 
@@ -58,6 +59,80 @@ const Products = () => {
         }
         setOpen(false)
     }
+
+    const [value, setValue] = useState();
+
+    const [category, setCategory] = useState([]);
+    const [category2, setCategory2] = useState("");
+
+    const GetCategory = async () => {
+        await fetch(import.meta.env.VITE_URL + "/Categories", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + getToken
+            }
+        }).then(resp => resp.json()).then(data => setCategory(data))
+    }
+    useEffect(() => {
+        GetCategory()
+    }, [])
+    const handleChangeCategory = (e) => {
+        console.log(e.target)
+        setCategory2(e.target.value)
+        Filter(e.target.value)
+    }
+
+    const Filter = async (idcategory) => {
+        if (idcategory === null) {
+            response()
+        }
+        else {
+            await fetch(import.meta.env.VITE_URL + "/ProductsById/" + idcategory, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + getToken
+                }
+            }).then(res => res.json()).then(data => {
+                //console.log("data: "+data.data)
+                if (JSON.stringify(data.data) == undefined) {
+                    console.log("Not Found")
+                    alert("No hay productos en esta categoria")
+                    response();
+                }
+                else {
+                    console.log(data.data)
+                    setProduct(data.data)
+                    setTotalPage(1)
+                }
+            }).catch(err => console.log("Error: " + err))
+        }
+
+    }
+
+
+    const Search = async () => {
+        //setvalue
+        //http://localhost:5081/api/ProductsPag
+        if (value != null) {
+            console.log(value)
+            await fetch(import.meta.env.VITE_URL + "/ProductsPag/" + value, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + getToken
+                }
+            }).then(resp => resp.json()).then(data => {
+                if (data.data != 0) {
+                    navigate(`details/${data.data}`)
+                }
+                else{
+                    alert("Producto no encontrado")
+                }
+            }).catch(err => console.log(err))
+        }
+
+        //console.log("valor: " +value)
+    }
+
     return <>
         <div >
             <Box>
@@ -66,8 +141,9 @@ const Products = () => {
                     justifyContent="center"
                     alignItems="center">
                     <Container fixed>
+
                         <Typography variant="h5" gutterBottom>Productos</Typography>
-                        <Grid container direction={"row"} justifyContent={"space-between"} alignItems={"center"}> 
+                        <Grid container direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
                             <Breadcrumbs separator=">" aria-label="breadcrumb">
                                 <Link underline="hover" color="inherit" href="" onClick={() => navigate("/")}>
                                     Home
@@ -76,21 +152,50 @@ const Products = () => {
                                     Productos
                                 </Typography>
                             </Breadcrumbs>
+                        </Grid>
 
-                            <Grid container direction={"row"} justifyContent={"flex-end"}>
-                                <Autocomplete disablePortal
-                                    id="combo-box-demo"
-                                    options={Product && Product.map((item) => {
-                                        return item.name
-                                    })}
-                                    sx={{ width: 300 }}
-                                    renderInput={(p) => <TextField {...p} label="Buscar Producto" />}
-                                />
-                                <IconButton aria-label="cart" onClick={() => navigate("carrito")}>
-                                    <SearchIcon />
-                                </IconButton>
-                            </Grid>
+                        <Grid container
+                            //direction={"row"}
+                            spacing={4}
+                            justifyContent={"flex-end"}
+                        >
+                            {/**category */}
+                            <FormControl sx={{ minWidth: 120 }}>
+                                <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    label="Category"
+                                    onChange={handleChangeCategory}
+                                    value={category2}
+                                    autoWidth
+                                >
+                                    {category && category.map((item) =>
+                                        <MenuItem value={item.id} key={item.id}>{item.name}</MenuItem>
+                                    )}
+                                </Select>
+                            </FormControl>
 
+                            {/**search */}
+                            <Autocomplete disablePortal
+                                id="controllable-states-demo"
+                                options={Product && Product.map((item) =>
+                                    item.name
+                                )}
+                                sx={{ width: 300 }}
+                                renderInput={(p) => <TextField {...p} label="Buscar Producto"
+                                    onChange={(event, newValue) => {
+                                        console.log(event.target.value);
+                                    }}
+                                    onSelect={(event, newValue) => {
+                                        setValue(event.target.value)
+                                    }}
+                                />}
+                            />
+
+                            <IconButton aria-label="cart" onClick={() => Search()}>
+                                <SearchIcon />
+                            </IconButton>
                         </Grid>
 
 
@@ -149,7 +254,7 @@ const Products = () => {
                     <Pagination count={totalPage} page={page} onChange={handleChange} />
                 </Grid>
             </Box>
-            <Snackbar open={Product===null ?  open: null} autoHideDuration={5000} onClose={handleClose} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
+            <Snackbar open={Product === null ? open : null} autoHideDuration={5000} onClose={handleClose} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
                 <Alert severity="success">Token Expirado</Alert>
             </Snackbar>
         </div>
