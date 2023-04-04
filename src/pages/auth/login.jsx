@@ -1,4 +1,5 @@
-import { Box, Button, Card, Grid, TextField, Typography, OutlinedInput } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { Box, Button, Card, Grid, TextField, Typography, OutlinedInput, Link, Divider } from "@mui/material";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -10,46 +11,69 @@ const Login = () => {
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
     const [error, setError] = useState(null);
+    const [Loading, setLoading] = useState(false)
 
 
-    const onChangeEmail = (e) => setEmail(e.target.value);
-    const onChangePassword = (e) => setPassword(e.target.value)
+
+    const onChangeEmail = (e) => {
+        setEmail(e.target.value)
+        setError(null)
+    };
+    const onChangePassword = (e) => {
+        setPassword(e.target.value)
+        setError(null)
+    }
 
     const navigate = useNavigate();
 
     const Loged = async () => {
         //console.log(email, password)
-        await fetch('http://localhost:5081/api/Users/login', {
-            method: 'Post',
-            headers: {
-                'Content-Type': 'application/json'
-                /*,
-                "Authorization": ``*/
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password
-            })
-        }).then(res => res.json()).then(data => {
-            //console.log(data.succes)
+        setLoading(!Loading)
+        if (!email && !password) {
+            
+            setTimeout(() => {
+                setLoading(false)
+                setError("Debe llenar todos los campos")
+                console.log("test")
+            }, 2000)
+        }
+        else {
+            setTimeout(() => {
+                setLoading(false)
+                fetch('http://localhost:5081/api/Users/login', {
+                    method: 'Post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                        /*,
+                        "Authorization": ``*/
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                }).then(res => res.json()).then(data => {
+                    //console.log(data.succes)
 
-            if (data.succes === false) {
-                setError("Invalid email or password");
-            }
-            else {
-                localStorage.setItem("Token", data.token);
-                localStorage.setItem("DATA", JSON.stringify(data.data));
-                setError(null);
-                const getToken = localStorage.getItem("Token");
-                if (getToken != null) {
-                    navigate("/");
-                }
-                //navigate("perfil");
-            }
-        }).catch(err => {
-            console.log(err);
-            setError("Error fetch");
-        })
+                    if (data.succes === false) {
+                        setError("Invalid email or password");
+                    }
+                    else {
+                        localStorage.setItem("Token", data.token);
+                        localStorage.setItem("DATA", JSON.stringify(data.data));
+                        setError(null);
+                        const getToken = localStorage.getItem("Token");
+                        if (getToken != null) {
+                            navigate("/");
+                        }
+                        //navigate("perfil");
+                    }
+                }).catch(err => {
+                    console.log(err);
+                    setError("Error fetch");
+                })
+            }, 2000)
+        }
+
     }
     return <>
         <Grid container
@@ -59,7 +83,7 @@ const Login = () => {
             top={"30%"}
             p={2}>
 
-            <Card variant="outlined">
+            <Card variant="outlined"    >
                 <Grid container direction={"column"} alignItems="center" sx={{
                     width: 500,
                     maxWidth: '100%',
@@ -78,6 +102,7 @@ const Login = () => {
                     />
                     <TextField
                         onChange={onChangePassword}
+                        required
                         id="outlined-password-input"
                         label="Password"
                         type="password"
@@ -85,7 +110,24 @@ const Login = () => {
                         fullWidth
                         margin="normal"
                     />
-                    <Button sx={{ marginTop: 3 }} variant="contained" onClick={Loged}>Login</Button>
+                    {error ? (<Typography variant="caption" color={"red"}>{error}</Typography>):null}
+                    <Grid container mr={"auto"}>
+                        <Link href="#" variant="body2" color="text.secondary">
+                            Olvido su contraseña?
+                        </Link>
+                    </Grid>
+                    <Divider />
+                    {Loading ?
+                        (
+                            <LoadingButton loading variant="outlined" sx={{ marginTop: 3, width: "100%" }}>
+                                Login
+                            </LoadingButton>
+                        )
+                        :
+                        (
+                            <Button sx={{ marginTop: 3, width: "100%" }} variant="contained" onClick={Loged}>Login</Button>
+                        )
+                    }
                 </Grid>
             </Card>
         </Grid >

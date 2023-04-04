@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Badge, Box, Button, Container, Divider, Grid, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material";
+import { AppBar, Avatar, Backdrop, Badge, Box, Button, CircularProgress, Container, Divider, Grid, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
@@ -10,8 +10,8 @@ const Home = () => {
     const getToken = localStorage.getItem("Token");
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
-
-
+    const [Loading, setLoading] = useState(false)
+    //const [Error, seTError] = useState(false)
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -103,18 +103,22 @@ const Home = () => {
                                     display: { xs: 'block', md: 'none' },
                                 }}
                             >
-                                <MenuItem onClick={() =>navigate("products")}>
+                                <MenuItem onClick={() => navigate("products")}>
                                     <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                                         <ShoppingCartIcon />
                                     </IconButton>
                                     Productos
                                 </MenuItem>
-                                <MenuItem onClick={() => navigate("carrito")}>
-                                    <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                                        <ShoppingCartIcon />
-                                    </IconButton>
-                                    Carrito
-                                </MenuItem>
+                                {getToken == null ? null
+                                    : (
+                                        <MenuItem onClick={() => navigate("carrito")}>
+                                            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                                                <ShoppingCartIcon />
+                                            </IconButton>
+                                            Carrito
+                                        </MenuItem>
+                                    )
+                                }
                                 <Divider />
                                 <MenuItem onClick={() => navigate("products")}>
                                     <IconButton size="large" aria-label="show 4 new mails" color="inherit">
@@ -155,47 +159,67 @@ const Home = () => {
                                 About
                             </Button>
                         </Box>
-                        <Box sx={{ flexGrow: 0.03, display: { xs: 'none', md: 'flex' } }}>
-                            <IconButton aria-label="cart" onClick={() => navigate("carrito")}>
-                                <Badge badgeContent={carritoNumber} color="secondary">
-                                    <ShoppingCartIcon />
-                                </Badge>
-                            </IconButton>
-                        </Box>
+                        {getToken == null ? null
+                            :
+                            (<Box sx={{ flexGrow: 0.03, display: { xs: 'none', md: 'flex' } }}>
+                                <IconButton aria-label="cart" onClick={() => navigate("carrito")}>
+                                    <Badge badgeContent={carritoNumber} color="secondary">
+                                        <ShoppingCartIcon />
+                                    </Badge>
+                                </IconButton>
+                            </Box>
+                            )
+                        }
 
                         <Box sx={{ flexGrow: 0 }}>
-                            <Tooltip title="Open settings">
-                                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                    <Avatar alt="Remy Sharp" >H</Avatar>
-                                </IconButton>
-                            </Tooltip>
-                            <Menu
-                                sx={{ mt: '45px' }}
-                                id="menu-appbar"
-                                anchorEl={anchorElUser}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}
-                            >
+                            {getToken == null ?
+                                (
+                                    <Button variant="outlined" onClick={() => {
+                                        setLoading(!Loading);
+                                        setTimeout(() => {
+                                            setLoading(!Loading);
+                                            navigate("login")
+                                        }, 1000)
+                                    }}>
+                                        Login
+                                    </Button>
+                                )
+                                :
+                                (
+                                    <>
+                                        <Tooltip title="Open settings">
+                                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                                <Avatar alt="Remy Sharp" >H</Avatar>
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Menu
+                                            sx={{ mt: '45px' }}
+                                            id="menu-appbar"
+                                            anchorEl={anchorElUser}
+                                            anchorOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'right',
+                                            }}
+                                            keepMounted
+                                            transformOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'right',
+                                            }}
+                                            open={Boolean(anchorElUser)}
+                                            onClose={handleCloseUserMenu}
+                                        >
+                                            <MenuItem onClick={() => navigate("profile")}>
+                                                <Typography textAlign="center">Profile</Typography>
+                                            </MenuItem>
+                                            <Divider />
+                                            <MenuItem onClick={() => Logout()}>
+                                                <Typography textAlign="center">Logout</Typography>
+                                            </MenuItem>
 
-                                <MenuItem onClick={() => navigate("profile")}>
-                                    <Typography textAlign="center">Profile</Typography>
-                                </MenuItem>
-                                {getToken == null ? (<MenuItem onClick={() => navigate("login")}>
-                                    <Typography textAlign="center">Login</Typography>
-                                </MenuItem>) : (<MenuItem onClick={() => Logout()}>
-                                    <Typography textAlign="center">Logout</Typography>
-                                </MenuItem>)}
-
-                            </Menu>
+                                        </Menu>
+                                    </>
+                                )
+                            }
                         </Box>
                     </Toolbar>
                 </Container>
@@ -205,6 +229,12 @@ const Home = () => {
         <Grid paddingTop={9}>
             <Outlet />
         </Grid>
+        <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={Loading}
+        >
+            <CircularProgress color="inherit" />
+        </Backdrop>
 
         <footer>
             <Box sx={{ textAlign: "center", height: "100%" }}>

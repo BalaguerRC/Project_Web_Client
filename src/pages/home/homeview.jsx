@@ -5,15 +5,8 @@ import ListProductCategory from "./listProductCategory";
 
 const HomeView = () => {
     const getToken = localStorage.getItem("Token");
-    /*const GetProductID1 = async () => {
-        await fetch("http://localhost:5081/api/ProductsById/1", {
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer " + getToken
-            }
-        }).then(resp => resp.json()).then(data => console.log(data))
-    }*/
-    const GetProduct = async () => {
+
+    /*const GetProduct = async () => {
         await fetch("http://localhost:5081/api/Products", {
             method: "GET",
             headers: {
@@ -25,7 +18,7 @@ const HomeView = () => {
     useEffect(() => {
         //GetProductID1();
         //GetProduct();
-    })
+    })*/
 
     return <div >
         <Box sx={{ alignItems: "center", display: "grid" }}>
@@ -38,9 +31,7 @@ const HomeView = () => {
             </Grid>
         </Box>
 
-        
         <ListProductCategory/>
-
     </div>
 }
 

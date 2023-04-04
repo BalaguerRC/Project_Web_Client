@@ -9,9 +9,13 @@ const Products = () => {
     const [Product, setProduct] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
+    const [Error, seTError] = useState(false)
+    const [Loading, setLoading] = useState(false)
+
 
     const getToken = localStorage.getItem("Token");
     const response = async () => {
+        //setLoading(false)
         await fetch(import.meta.env.VITE_URL + "/ProductsPag/getProductClient", {
             method: "GET",
             headers: {
@@ -20,12 +24,19 @@ const Products = () => {
         }).then(resp => resp.json()).then(data => {
             setProduct(data.data)
             setTotalPage(data.totalPages)
-        }).catch(err => console.log(err))
+        }).catch(err => {
+            console.log(err)
+            seTError(!Error);
+        })
     }
 
 
     useEffect(() => {
         response()
+        setLoading(true)
+        setTimeout(() => {
+            setLoading(false)
+        }, 1500)
     }, [])
 
     const navigate = useNavigate()
@@ -43,14 +54,13 @@ const Products = () => {
         }).catch(err => console.log(err))
     }
 
-
-
     const handleChange = (event, value) => {
         setPage(value);
         console.log(value)
         CurrentPage(value)
     }
 
+    //dialog
     const [open, setOpen] = useState(true);
 
     const handleClose = (event, reason) => {
@@ -59,9 +69,10 @@ const Products = () => {
         }
         setOpen(false)
     }
+    //end
 
     const [value, setValue] = useState();
-
+    //category
     const [category, setCategory] = useState([]);
     const [category2, setCategory2] = useState("");
 
@@ -76,6 +87,7 @@ const Products = () => {
     useEffect(() => {
         GetCategory()
     }, [])
+
     const handleChangeCategory = (e) => {
         console.log(e.target)
         setCategory2(e.target.value)
@@ -124,7 +136,7 @@ const Products = () => {
                 if (data.data != 0) {
                     navigate(`details/${data.data}`)
                 }
-                else{
+                else {
                     alert("Producto no encontrado")
                 }
             }).catch(err => console.log(err))
@@ -142,7 +154,7 @@ const Products = () => {
                     alignItems="center">
                     <Container fixed>
 
-                        <Typography variant="h5" gutterBottom>Productos</Typography>
+                        <Typography variant="h3"     gutterBottom>Productos</Typography>
                         <Grid container direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
                             <Breadcrumbs separator=">" aria-label="breadcrumb">
                                 <Link underline="hover" color="inherit" href="" onClick={() => navigate("/")}>
@@ -155,9 +167,9 @@ const Products = () => {
                         </Grid>
 
                         <Grid container
-                            //direction={"row"}
-                            spacing={4}
-                            justifyContent={"flex-end"}
+                            direction={"row"}
+                            justifyContent={"right"}
+                            alignItems={"center"}
                         >
                             {/**category */}
                             <FormControl sx={{ minWidth: 120 }}>
@@ -210,52 +222,76 @@ const Products = () => {
                             <Grid container item spacing={5}>
                                 {Product && Product.map((item, value) => {
                                     return <Grid item xs={6} md={3} key={item.id}>
-                                        <Card sx={{ maxWidth: 345, minWidth: 100, backgroundColor: "#2b3246" }} variant="outlined">
-                                            <CardActionArea onClick={() => navigate("/products/details/" + item.id)}>
-                                                <CardMedia
-                                                    component="img"
-                                                    height="140"
-                                                    image={item.image == null ? "/src/assets/signo.png" : item.image}
-                                                    alt="green iguana"
-                                                />
-                                                <CardContent>
-                                                    <Box sx={{ my: 0.1, mx: 0 }}>
-                                                        <Grid container alignItems="center">
-                                                            <Grid item xs>
-                                                                <Typography gutterBottom variant="h6" component="div">
-                                                                    {item.name}
+                                        {Loading ?
+                                            (
+                                                <Stack spacing={1} sx={{ maxWidth: 345, minWidth: 100 }}>
+                                                    {/* For variant="text", adjust the height via font-size */}
+                                                    <Skeleton variant="rounded" height={140} />
+                                                    <Skeleton variant="rectangular" width={110} />
+                                                    <Skeleton variant="rounded" width={110} />
+                                                </Stack>
+                                            )
+                                            :
+                                            (
+                                                <Card sx={{ maxWidth: 345, minWidth: 100, backgroundColor: "#2b3246" }} variant="outlined">
+                                                    <CardActionArea onClick={() => navigate("/products/details/" + item.id)}>
+                                                        <CardMedia
+                                                            component="img"
+                                                            height="140"
+                                                            image={item.image == null ? "/src/assets/signo.png" : item.image}
+                                                            alt="green iguana"
+                                                        />
+
+                                                        <CardContent>
+                                                            <Box sx={{ my: 0.1, mx: 0 }}>
+                                                                <Grid container alignItems="center">
+                                                                    <Grid item xs>
+                                                                        <Typography gutterBottom variant="h6" component="div">
+                                                                            {item.name}
+                                                                        </Typography>
+                                                                    </Grid>
+                                                                    <Grid item>
+                                                                        <Typography gutterBottom variant="subtitle1" component="div">
+                                                                            ${item.precio}
+                                                                        </Typography>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </Box>
+                                                            <Divider />
+                                                            <Box sx={{ my: 0.1 }}>
+                                                                <Typography gutterBottom variant="body2">
+                                                                    Categoria:
                                                                 </Typography>
-                                                            </Grid>
-                                                            <Grid item>
-                                                                <Typography gutterBottom variant="subtitle1" component="div">
-                                                                    ${item.precio}
-                                                                </Typography>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </Box>
-                                                    <Divider />
-                                                    <Box sx={{ my: 0.1 }}>
-                                                        <Typography gutterBottom variant="body2">
-                                                            Categoria:
-                                                        </Typography>
-                                                        <Stack direction="row" spacing={1}>
-                                                            <Chip label={item.category} color="primary" />
-                                                        </Stack>
-                                                    </Box>
-                                                </CardContent>
-                                            </CardActionArea>
-                                        </Card>
+                                                                <Stack direction="row" spacing={1}>
+                                                                    <Chip label={item.category} color="primary" />
+                                                                </Stack>
+                                                            </Box>
+                                                        </CardContent>
+                                                    </CardActionArea>
+                                                </Card>
+                                            )
+                                        }
                                     </Grid>
                                 })}
                             </Grid>
+                            {/*<Grid item xs={6} md={3} >
+                                <Stack spacing={1} sx={{ maxWidth: 345, minWidth: 100 }}>
+                                    <Skeleton variant="rounded" height={140} />
+                                    <Skeleton variant="rectangular" width={110}/>
+                                    <Skeleton variant="rounded" width={110}  />
+                                </Stack>
+                            </Grid> */}
+
                         </Box>
                     </Container>
+                    <Stack marginTop={2} marginBottom={2}>
+                        <Pagination color="primary" size="large" count={totalPage} page={page} onChange={handleChange} />
+                    </Stack>
 
-                    <Pagination count={totalPage} page={page} onChange={handleChange} />
                 </Grid>
             </Box>
-            <Snackbar open={Product === null ? open : null} autoHideDuration={5000} onClose={handleClose} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
-                <Alert severity="success">Token Expirado</Alert>
+            <Snackbar open={Error ? open : null} autoHideDuration={5000} onClose={handleClose} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
+                <Alert variant="filled" severity="warning">Token Expirado</Alert>
             </Snackbar>
         </div>
 

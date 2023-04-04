@@ -1,4 +1,4 @@
-import { Box, Breadcrumbs, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Chip, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, Link, List, ListItem, Stack, Typography } from "@mui/material";
+import { Backdrop, Box, Breadcrumbs, Button, ButtonGroup, Card, CardActionArea, CardActions, CardContent, CardMedia, Chip, CircularProgress, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, Link, List, ListItem, Stack, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -8,29 +8,34 @@ const Car = () => {
     const [carrito2, setCarrito] = useState([])
     //const [precioTotal, setPrecioTotal] = useState(0);
     const [open, setOpen] = useState(false);
+    const [Loading2, setLoading2] = useState(false)
 
     const getToken = localStorage.getItem("Token");
 
     const Buy = async (id, quantity) => {
-        console.log(id, quantity)
-        await setTimeout(() => {
-            fetch(import.meta.env.VITE_URL + "/ProductsPag/" + id, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + getToken
-                },
-                body: JSON.stringify({
-                    quantity: quantity
-                })
-            }).then(res => res.json()).then(data => {
-                if (data.succes === true) {
-                    console.log("data es: " + data)
-                    response();
-                }
-                console.log(data)
-            }).catch(err => console.log("Error: " + err))
-        }, 2000)
+        //console.log(id, quantity)
+        fetch(import.meta.env.VITE_URL + "/ProductsPag/" + id, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + getToken
+            },
+            body: JSON.stringify({
+                quantity: quantity
+            })
+        }).then(res => res.json()).then(data => {
+            if (data.succes === true) {
+                console.log("data es: " + data)
+                localStorage.removeItem("Carrito");
+                response();
+                //
+            }
+            console.log(data)
+        }).catch(err => {
+            console.log("Error: " + err)
+            //handleClose();
+        })
+        handleClose();
 
     }
 
@@ -41,8 +46,26 @@ const Car = () => {
         }
     };
 
+    //progress
+    const [Loading, setLoading] = useState(false)
     const handleClickBuy = () => {
-        { carrito2 && carrito2.map((item, value) => Buy(item.id, item.quantity)) }
+        setLoading(!Loading)
+        for (let i in carrito2) {
+            setTimeout(() => {
+                Buy(carrito2[i].id, carrito2[i].quantity - 1)
+                setLoading(!Loading)
+            }, 2000)
+        }
+    }
+    
+    const removeProductCar = () => {
+        setLoading2(!Loading2)
+        setTimeout(() => {
+            //localStorage.removeItem("Carrito");
+            //response();
+            console.log("test")
+            setLoading2(Loading2===true)
+        }, 2000)
     }
 
     const handleClose = () => {
@@ -82,7 +105,7 @@ const Car = () => {
                     alignItems="center">
                     <Container fixed>
                         <Grid container spacing={2}>
-                            <Grid item xs={8}>
+                            <Grid item xs>
                                 <Typography variant="h3" gutterBottom>Carrito</Typography>
                                 <Breadcrumbs separator=">" aria-label="breadcrumb" >
                                     <Link underline="hover" color="inherit" href="" onClick={() => navigate("/")}>
@@ -93,7 +116,7 @@ const Car = () => {
                                     </Typography>
                                 </Breadcrumbs>
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs>
                                 <Grid container direction={"column"} justifyContent="center" alignItems={"flex-end"}>
 
                                     <Typography variant="caption" color={"text.secondary"}>
@@ -105,7 +128,10 @@ const Car = () => {
                                 </Grid>
 
                                 <Grid container direction={"row"} justifyContent="flex-end" alignItems={"center"}>
-                                    <Button variant="outlined" onClick={handleClickOpen}>Comprar todo</Button>
+                                    <ButtonGroup variant="outlined" >
+                                        <Button variant="outlined" onClick={handleClickOpen}>Comprar todo</Button>
+                                        <Button variant="outlined" onClick={removeProductCar}>Eliminar todo</Button>
+                                    </ButtonGroup>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -131,7 +157,7 @@ const Car = () => {
                             </DialogContent>
                             <Divider />
                             <DialogActions>
-
+                                {Loading ? (<CircularProgress />) : null}
                                 <Button onClick={handleClickBuy} autoFocus>
                                     Comprar
                                 </Button>
@@ -192,6 +218,12 @@ const Car = () => {
                 </Grid>
             </Box>
         </Grid>
+        <Backdrop
+            sx={{ color: '#7eb8cf', zIndex: (theme) => theme.zIndex.drawer }}
+            open={Loading2}
+        >
+            <CircularProgress color="inherit" />
+        </Backdrop>
     </>
 }
 

@@ -2,6 +2,7 @@
 //import { BookmarkAdd } from "@mui/icons-material";
 //import { AspectRatio } from "@mui/icons-material";
 //import { AspectRatio } from "@mui/icons-material";
+import { InfoOutlined } from '@mui/icons-material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { Alert, Avatar, Box, Breadcrumbs, Button, ButtonBase, Card, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, IconButton, Link, Paper, Snackbar, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -15,6 +16,7 @@ const Details = () => {
     console.log(id)
     const [Product, setProduct] = useState({});
     const [LoadData, setLoadData] = useState();
+
 
 
     const getToken = localStorage.getItem("Token");
@@ -82,7 +84,17 @@ const Details = () => {
     const navigate = useNavigate();
 
     const AddCarrito = async (data) => {
-        await AddCar(data);
+        const Valid = false
+        const Carrito = JSON.parse(localStorage.getItem("Carrito"))
+        for (let i in Carrito) {
+            if (data.id === Carrito[i].id) {
+                console.log("uno igual")
+                Valid = !Valid;
+            }
+        }
+        if (!Valid) {
+            AddCar(data);
+        }
     }
 
     const [open, setOpen] = useState(false);
@@ -104,8 +116,14 @@ const Details = () => {
                 justifyContent="center"
                 alignItems="center">
                 <Container fixed>
+                    <Grid>
+                        <Typography variant="h5" gutterBottom sx={{ display: "flex", alignItems: "flex-end" }}> 
+                            <Button variant='text' onClick={() => navigate("/products")}>
+                                {"< - "}
+                            </Button>Detalles del Producto
+                        </Typography>
+                    </Grid>
 
-                    <Typography variant="h5" gutterBottom>Productos</Typography>
 
                     <Breadcrumbs separator=">" aria-label="breadcrumb" >
                         <Link underline="hover" key="1" href="" color="inherit" onClick={() => navigate("/")}>
@@ -121,17 +139,13 @@ const Details = () => {
 
                     <Divider />
 
-                    <Button variant='contained' onClick={() => navigate("/products")}>
-                        {"<-Back"}
-                    </Button>
-
                     <Box marginTop={5}>
                         <Paper
                             sx={{
                                 justifyContent: "center",
-                                p: 4,
+                                p: 3,
                                 margin: "auto",
-                                maxWidth: 1000,
+                                maxWidth: "auto",
                                 flexGrow: 1,
                                 backgroundColor: "#2b3246"
                             }}
@@ -139,9 +153,9 @@ const Details = () => {
                         >
                             <Grid container spacing={3} justifyContent={"center"}>
                                 <Grid item marginRight={1.8}>
-                                    <ButtonBase sx={{ width: 228, height: 228 }}>
+                                    <ButtonBase sx={{ maxWidth: 428, height: 428 }}>
                                         <CardMedia component="img"
-                                            height="294"
+                                            height="428"
                                             image={Product.image == null ? "/src/assets/signo.png" : Product.image}
                                             alt="product"
                                             sx={{
@@ -155,7 +169,6 @@ const Details = () => {
 
                                     </ButtonBase >
                                 </Grid>
-
                                 <Grid item xs={12} sm container>
                                     <Grid item xs container direction="column" spacing={2}>
                                         <Grid item xs>
@@ -165,79 +178,133 @@ const Details = () => {
                                             <Typography gutterBottom variant="" component="div">
                                                 Detalles
                                             </Typography>
-                                            <Typography variant="subtitle1" gutterBottom>
+                                            <Typography variant="h6" gutterBottom sx={{ display: "flex", alignItems: "flex-end" }}>
                                                 - Codigo:
-                                                <Typography variant="" gutterBottom>
+                                                <Typography variant="body2" gutterBottom color={"text.secondary"} marginLeft={0.5}>
                                                     {Product.id}
                                                 </Typography>
                                             </Typography>
-                                            <Typography variant="subtitle1" gutterBottom>
+                                            <Typography variant="h6" gutterBottom sx={{ display: "flex", alignItems: "flex-end" }}>
                                                 - Descripcion:
-                                                <Typography variant="" gutterBottom>
+                                                <Typography variant="body2" gutterBottom color={"text.secondary"} marginLeft={0.5}>
                                                     {Product.description}
                                                 </Typography>
                                             </Typography>
-                                            <Typography variant="subtitle1" gutterBottom>
-                                                - Cantidad:
-                                                <Typography variant="" color="text.secondary">
-                                                    {Product.quantity}
-                                                </Typography>
-                                            </Typography>
-                                            <Typography variant="subtitle1" gutterBottom>
+                                            {Product.quantity == 0 ?
+                                                null
+                                                :
+                                                (
+                                                    <Grid >
+                                                        <Typography variant="h6" gutterBottom sx={{ display: "flex", alignItems: "flex-end" }}>
+                                                            - Cantidad:
+                                                            <Typography variant="body1" color="text.secondary" marginLeft={0.5}>
+                                                                {Product.quantity}
+                                                            </Typography>
+                                                        </Typography>
+
+                                                    </Grid>
+
+                                                )
+                                            }
+                                            <Typography variant="h6" gutterBottom sx={{ display: "flex", alignItems: "flex-end" }}>
                                                 - Categoria:
-                                                <Typography variant="" gutterBottom>
+                                                <Typography variant="body2" gutterBottom color={"text.secondary"} marginLeft={0.5}>
                                                     {Product.category}
                                                 </Typography>
                                             </Typography>
-                                            <Typography variant="subtitle1" gutterBottom>
+                                            <Typography variant="h6" gutterBottom sx={{ display: "flex", alignItems: "flex-end" }}>
                                                 - Autor:
-                                                <Typography variant="" gutterBottom>
+                                                <Typography variant="body2" gutterBottom color={"text.secondary"} marginLeft={0.5}>
                                                     {Product.author}
                                                 </Typography>
                                             </Typography>
-                                            <Typography variant="subtitle1" gutterBottom>
+                                            <Typography variant="h6" gutterBottom sx={{ display: "flex", alignItems: "flex-end" }}>
                                                 - Fecha Exportacion:
-                                                <Typography variant="" gutterBottom>
+                                                <Typography variant="body2" gutterBottom color={"text.secondary"} marginLeft={0.5}>
                                                     {Product.date}
                                                 </Typography>
                                             </Typography>
+                                            {Product.quantity == 0 ?
+                                                (
+                                                    <Typography variant="subtitle1" gutterBottom>
+                                                        <Grid container direction={"row"} alignItems="center">
+                                                            <InfoOutlined sx={{ color: "yellow" }} />
+                                                            <Typography variant="" color="yellow">
+                                                                Producto no disponible
+                                                            </Typography>
+                                                        </Grid>
+                                                    </Typography>
+                                                )
+                                                :
+                                                null
+                                            }
                                         </Grid>
                                         <Grid item
                                             marginTop={"auto"}
                                             sx={{ justifyContent: "right", display: "flex", }}>
-                                            <Button
-                                                variant="contained"
-                                                size="small"
-                                                // sx={{backgroundColor: "#7ecfbe"}}
-                                                onClick={() => {
-                                                    //Buy(Product.id, Product.quantity - 1)
-                                                    handleClickDialog()
-                                                }}
-                                            >
-                                                Comprar
-                                            </Button>
-                                            <Button
-                                                variant="outlined"
-                                                size="small"
-                                                sx={{ marginLeft: 1 }}
-                                                startIcon={<AddShoppingCartIcon />}
-                                                onClick={() => {
-                                                    const data = {
-                                                        id: id,
-                                                        name: Product.name,
-                                                        image: Product.image,
-                                                        precio: Product.precio
+                                            {Product.quantity == 0 ?
+                                                (
+                                                    <Button
+                                                        variant="contained"
+                                                        size="small"
+                                                        disabled
+                                                    >
+                                                        Comprar
+                                                    </Button>
+                                                )
+                                                :
+                                                (
+                                                    <Button
+                                                        variant="contained"
+                                                        size="small"
+                                                        // sx={{backgroundColor: "#7ecfbe"}}
+                                                        onClick={() => {
+                                                            //Buy(Product.id, Product.quantity - 1)
+                                                            handleClickDialog()
+                                                        }}
+                                                    >
+                                                        Comprar
+                                                    </Button>
+                                                )
+                                            }
+                                            {Product.quantity == 0 ?
+                                                (
+                                                    <Button
+                                                        variant="outlined"
+                                                        size="small"
+                                                        sx={{ marginLeft: 1 }}
+                                                        startIcon={<AddShoppingCartIcon />}
+                                                        disabled
+                                                    >
+                                                        Guardar
+                                                    </Button>
+                                                )
+                                                :
+                                                (
+                                                    <Button
+                                                        variant="outlined"
+                                                        size="small"
+                                                        sx={{ marginLeft: 1 }}
+                                                        startIcon={<AddShoppingCartIcon />}
+                                                        onClick={() => {
+                                                            const data = {
+                                                                id: id,
+                                                                name: Product.name,
+                                                                image: Product.image,
+                                                                precio: Product.precio,
+                                                                quantity: Product.quantity
 
-                                                    }
-                                                    AddCarrito(data)
+                                                            }
+                                                            AddCarrito(data)
 
-                                                    handleClick();
-                                                    //Carrito.push({id:id,name: Product.name})
-                                                }}
-                                            >
-                                                Guardar
-                                            </Button>
-
+                                                            handleClick();
+                                                            //Carrito.push({id:id,name: Product.name})
+                                                        }}
+                                                    >
+                                                        Guardar
+                                                    </Button>
+                                                )
+                                            }
                                         </Grid>
                                     </Grid>
                                     <Grid item>
@@ -267,7 +334,7 @@ const Details = () => {
                 <DialogContentText>Esta seguro?</DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={()=>{
+                <Button onClick={() => {
                     Buy(Product.id, Product.quantity - 1)
                     handleCloseDialog()
                 }}>Comprar</Button>
