@@ -5,9 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 
-    //const email=useRef(0);
-    //const password=useRef(0);
-
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
     const [error, setError] = useState(null);
@@ -30,7 +27,7 @@ const Login = () => {
         //console.log(email, password)
         setLoading(!Loading)
         if (!email && !password) {
-            
+
             setTimeout(() => {
                 setLoading(false)
                 setError("Debe llenar todos los campos")
@@ -92,6 +89,11 @@ const Login = () => {
                     <Typography variant="button" component={"h3"}>
                         Login
                     </Typography>
+                    <Grid container>
+                        <Link component={"button"} underline="hover" onClick={()=>navigate("/")}>
+                            <Typography variant="button" color={"text.secondary"}>{"<-Home"}</Typography>
+                        </Link>
+                    </Grid>
                     <TextField
                         margin="normal"
                         onChange={onChangeEmail}
@@ -110,7 +112,7 @@ const Login = () => {
                         fullWidth
                         margin="normal"
                     />
-                    {error ? (<Typography variant="caption" color={"red"}>{error}</Typography>):null}
+                    {error ? (<Typography variant="caption" color={"red"}>{error}</Typography>) : null}
                     <Grid container mr={"auto"}>
                         <Link href="#" variant="body2" color="text.secondary">
                             Olvido su contraseña?

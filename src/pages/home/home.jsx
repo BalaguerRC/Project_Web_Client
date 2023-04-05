@@ -1,8 +1,11 @@
-import { AppBar, Avatar, Backdrop, Badge, Box, Button, CircularProgress, Container, Divider, Grid, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material";
+import { AppBar, Avatar, Backdrop, Badge, Box, Button, CircularProgress, Container, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import LogoutIcon from "@mui/icons-material/Logout";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import InfoIcon from '@mui/icons-material/Info';
 
 export const CarritoCantidad = 0;
 
@@ -12,6 +15,8 @@ const Home = () => {
     const [anchorElUser, setAnchorElUser] = useState(null);
     const [Loading, setLoading] = useState(false)
     //const [Error, seTError] = useState(false)
+
+    const getData= JSON.parse(localStorage.getItem("DATA"))
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -104,7 +109,7 @@ const Home = () => {
                                 }}
                             >
                                 <MenuItem onClick={() => navigate("products")}>
-                                    <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                                    <IconButton>
                                         <ShoppingCartIcon />
                                     </IconButton>
                                     Productos
@@ -112,7 +117,7 @@ const Home = () => {
                                 {getToken == null ? null
                                     : (
                                         <MenuItem onClick={() => navigate("carrito")}>
-                                            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                                            <IconButton>
                                                 <ShoppingCartIcon />
                                             </IconButton>
                                             Carrito
@@ -121,8 +126,8 @@ const Home = () => {
                                 }
                                 <Divider />
                                 <MenuItem onClick={() => navigate("products")}>
-                                    <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                                        <ShoppingCartIcon />
+                                    <IconButton >
+                                        <InfoIcon/>
                                     </IconButton>
                                     About
                                 </MenuItem>
@@ -189,7 +194,7 @@ const Home = () => {
                                     <>
                                         <Tooltip title="Open settings">
                                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                                <Avatar alt="Remy Sharp" >H</Avatar>
+                                                <Avatar alt="Remy Sharp" >{getData.name.substr(0,1)}</Avatar>
                                             </IconButton>
                                         </Tooltip>
                                         <Menu
@@ -208,11 +213,20 @@ const Home = () => {
                                             open={Boolean(anchorElUser)}
                                             onClose={handleCloseUserMenu}
                                         >
-                                            <MenuItem onClick={() => navigate("profile")}>
+                                            <MenuItem onClick={() => {
+                                                handleCloseUserMenu()
+                                                navigate("profile")
+                                                }}>
+                                                <ListItemIcon>
+                                                    <AccountCircleIcon/>
+                                                </ListItemIcon>
                                                 <Typography textAlign="center">Profile</Typography>
                                             </MenuItem>
                                             <Divider />
                                             <MenuItem onClick={() => Logout()}>
+                                                <ListItemIcon>
+                                                    <LogoutIcon/>
+                                                </ListItemIcon>
                                                 <Typography textAlign="center">Logout</Typography>
                                             </MenuItem>
 
@@ -226,7 +240,7 @@ const Home = () => {
 
             </AppBar>
         </header>
-        <Grid paddingTop={9}>
+        <Grid paddingTop={9} sx={{minHeight: "100vh", display:"flex", flexDirection: "column"}}>
             <Outlet />
         </Grid>
         <Backdrop
@@ -236,8 +250,8 @@ const Home = () => {
             <CircularProgress color="inherit" />
         </Backdrop>
 
-        <footer>
-            <Box sx={{ textAlign: "center", height: "100%" }}>
+        <footer style={{"height": "100%"}}>
+            <Box sx={{ textAlign: "center", position:"static" }}>
                 <Typography variant="h7">
                     Copyright © 2023 - All right reserved by NOTHING
                 </Typography>

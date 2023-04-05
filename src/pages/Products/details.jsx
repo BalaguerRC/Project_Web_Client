@@ -117,7 +117,7 @@ const Details = () => {
                 alignItems="center">
                 <Container fixed>
                     <Grid>
-                        <Typography variant="h5" gutterBottom sx={{ display: "flex", alignItems: "flex-end" }}> 
+                        <Typography variant="h4" gutterBottom sx={{ display: "flex", alignItems: "flex-end" }}> 
                             <Button variant='text' onClick={() => navigate("/products")}>
                                 {"< - "}
                             </Button>Detalles del Producto
@@ -126,13 +126,13 @@ const Details = () => {
 
 
                     <Breadcrumbs separator=">" aria-label="breadcrumb" >
-                        <Link underline="hover" key="1" href="" color="inherit" onClick={() => navigate("/")}>
+                        <Link underline="hover" key="1" component={"button"} color="inherit" onClick={() => navigate("/")}>
                             Home
                         </Link>
-                        <Link key="2" color="text.primary" href="" onClick={() => navigate("/products")}>
+                        <Link key="2" color="text.primary" component={"button"} onClick={() => navigate("/products")}>
                             Productos
                         </Link>
-                        <Typography key="3" color="text.primary">
+                        <Typography key="3" color="text.primary" >
                             {id}
                         </Typography>,
                     </Breadcrumbs>

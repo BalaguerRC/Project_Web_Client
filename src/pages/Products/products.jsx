@@ -154,7 +154,11 @@ const Products = () => {
                     alignItems="center">
                     <Container fixed>
 
-                        <Typography variant="h3"     gutterBottom>Productos</Typography>
+                        <Typography variant="h4" gutterBottom>
+                            <Button variant='text' onClick={() => navigate("/")}>
+                                {"< - "}
+                            </Button>Productos
+                        </Typography>
                         <Grid container direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
                             <Breadcrumbs separator=">" aria-label="breadcrumb">
                                 <Link underline="hover" color="inherit" href="" onClick={() => navigate("/")}>
@@ -182,6 +186,7 @@ const Products = () => {
                                     value={category2}
                                     autoWidth
                                 >
+                                    <MenuItem value="">None</MenuItem>
                                     {category && category.map((item) =>
                                         <MenuItem value={item.id} key={item.id}>{item.name}</MenuItem>
                                     )}

@@ -12,6 +12,8 @@ import Details from './pages/Products/details'
 import Login from './pages/auth/login'
 import Car from "./pages/Car/car"
 import Profile from './pages/auth/profile'
+import Perfil from './pages/auth/Perfil/perfil'
+import { AuthLayout, LoginLayout } from "./components/AuthLayout.jsx"
 
 function App() {
   //const [count, setCount] = useState(0)
@@ -48,19 +50,34 @@ function App() {
           ]
         },
         {
-          path: "carrito",
-          element: <Car />
-        },
-
-        {
-          path: "profile",
-          element: <Profile />
+          element: <AuthLayout />,
+          children: [
+            {
+              path: "carrito",
+              element: <Car />
+            },
+            {
+              path: "profile",
+              element: <Profile />,
+              children: [
+                {
+                  index: true,
+                  element: <Perfil />,
+                }
+              ]
+            },
+          ]
         },
       ]
     },
     {
-      path: "login",
-      element: <Login />
+      element: <LoginLayout />,
+      children: [
+        {
+          path: "login",
+          element: <Login />
+        },
+      ]
     },
     {
       path: "*",

@@ -1,4 +1,4 @@
-import { Backdrop, Box, Breadcrumbs, Button, ButtonGroup, Card, CardActionArea, CardActions, CardContent, CardMedia, Chip, CircularProgress, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, Link, List, ListItem, Stack, Typography } from "@mui/material";
+import { Backdrop, Box, Breadcrumbs, Button, ButtonGroup, Card, CardActionArea, CardActions, CardContent, CardMedia, Chip, CircularProgress, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, Link, List, ListItem, Paper, Stack, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -57,14 +57,14 @@ const Car = () => {
             }, 2000)
         }
     }
-    
+
     const removeProductCar = () => {
         setLoading2(!Loading2)
         setTimeout(() => {
             //localStorage.removeItem("Carrito");
             //response();
             console.log("test")
-            setLoading2(Loading2===true)
+            setLoading2(Loading2 === true)
         }, 2000)
     }
 
@@ -106,9 +106,13 @@ const Car = () => {
                     <Container fixed>
                         <Grid container spacing={2}>
                             <Grid item xs>
-                                <Typography variant="h3" gutterBottom>Carrito</Typography>
+                                <Typography variant="h4" gutterBottom>
+                                    <Button variant='text' onClick={() => navigate("/")}>
+                                        {"< - "}
+                                    </Button>Carrito
+                                </Typography>
                                 <Breadcrumbs separator=">" aria-label="breadcrumb" >
-                                    <Link underline="hover" color="inherit" href="" onClick={() => navigate("/")}>
+                                    <Link underline="hover" color="inherit" component={"button"} onClick={() => navigate("/")}>
                                         Home
                                     </Link>
                                     <Typography color="text.primary">
@@ -126,13 +130,25 @@ const Car = () => {
                                         Cantidad: {Carrito.length}
                                     </Typography>
                                 </Grid>
-
-                                <Grid container direction={"row"} justifyContent="flex-end" alignItems={"center"}>
-                                    <ButtonGroup variant="outlined" >
-                                        <Button variant="outlined" onClick={handleClickOpen}>Comprar todo</Button>
-                                        <Button variant="outlined" onClick={removeProductCar}>Eliminar todo</Button>
-                                    </ButtonGroup>
-                                </Grid>
+                                {carrito2 == null ?
+                                    (
+                                        <Grid container direction={"row"} justifyContent="flex-end" alignItems={"center"}>
+                                            <ButtonGroup variant="outlined" >
+                                                <Button variant="outlined" disabled>Comprar todo</Button>
+                                                <Button variant="outlined" disabled>Eliminar todo</Button>
+                                            </ButtonGroup>
+                                        </Grid>
+                                    )
+                                    :
+                                    (
+                                        <Grid container direction={"row"} justifyContent="flex-end" alignItems={"center"}>
+                                            <ButtonGroup variant="outlined" >
+                                                <Button variant="outlined" onClick={handleClickOpen}>Comprar todo</Button>
+                                                <Button variant="outlined" onClick={removeProductCar}>Eliminar todo</Button>
+                                            </ButtonGroup>
+                                        </Grid>
+                                    )
+                                }
                             </Grid>
                         </Grid>
                         <Dialog open={open}
@@ -170,6 +186,19 @@ const Car = () => {
                             paddingTop={1}
                             justifyContent="center">
                             <Grid container item spacing={5}>
+                                {carrito2 == null ?
+                                    (
+                                        <Grid item xs>
+                                            <Paper sx={{ padding: 3, display: "grid", alignItems: "center", justifyContent: "center" }} elevation={2}>
+                                                <Typography variant="h6" gutterBottom>
+                                                    No tienes productos
+                                                </Typography>
+                                            </Paper>
+                                        </Grid>
+                                    )
+                                    :
+                                    null
+                                }
                                 {carrito2 && carrito2.map((item, value) => {
                                     //const num1= item.precio
                                     //setPrecioTotal({precio: item.precio});
