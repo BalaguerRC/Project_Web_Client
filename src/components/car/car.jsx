@@ -1,4 +1,4 @@
-import { Backdrop, Box, Breadcrumbs, Button, ButtonGroup, Card, CardActionArea, CardActions, CardContent, CardMedia, Chip, CircularProgress, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, Link, List, ListItem, Paper, Stack, Typography } from "@mui/material";
+import { Alert, Backdrop, Box, Breadcrumbs, Button, ButtonGroup, Card, CardActionArea, CardActions, CardContent, CardMedia, Chip, CircularProgress, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, Link, List, ListItem, Paper, Snackbar, Stack, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -8,6 +8,8 @@ const Car = () => {
     const [carrito2, setCarrito] = useState([])
     //const [precioTotal, setPrecioTotal] = useState(0);
     const [open, setOpen] = useState(false);
+    const [open2, setOpen2] = useState(false);
+
     const [Loading2, setLoading2] = useState(false)
 
     const getToken = localStorage.getItem("Token");
@@ -26,6 +28,7 @@ const Car = () => {
         }).then(res => res.json()).then(data => {
             if (data.succes === true) {
                 console.log("data es: " + data)
+                /**Fix */
                 localStorage.removeItem("Carrito");
                 response();
                 //
@@ -36,6 +39,62 @@ const Car = () => {
             //handleClose();
         })
         handleClose();
+
+    }
+
+    /**
+     * Dialog
+     */
+    const [openDialog, setOpenDialog] = useState(false);
+
+    const handleClickDialog = () => {
+        setOpenDialog(true)
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(false)
+    }
+
+    {/**only one */ }
+    const handleClose2 = () => {
+        setOpen2(false);
+    };
+    const [localId, setlocalId] = useState()
+    const [localname, setlocalname] = useState()
+    const [localprecio, setlocalprecio] = useState()
+    const [localimage, setlocalimage] = useState()
+    const [localQuantity, setlocalQuantity] = useState()
+    const handleClickOpen2 = (id, name, precio, image, quantity) => {
+        if (Carrito != 0) {
+            setlocalId(id)
+            setlocalname(name)
+            setlocalprecio(precio)
+            setlocalimage(image)
+            setlocalQuantity(quantity)
+            setOpenDialog(true);
+        }
+    };
+
+    const BuyOneProduct = () => {
+        setTimeout(() => {
+            for (let i in carrito2) {
+                if (localId === carrito2[i].id) {
+                    console.log("posicion", i)
+                    console.log("uno igual", carrito2[i])
+                    /*const index= Carrito.indexOf(localId,i)
+                    */
+                    console.log("esto es id:" ,localId, " cantidad:",localQuantity)
+                    Buy(localId,localQuantity-1)
+                    setlocalId()
+                    setlocalQuantity()
+                    Carrito.splice(i, 1)
+                    console.log(Carrito)
+                    localStorage.setItem("Carrito", JSON.stringify(Carrito))
+                }
+            }
+            handleCloseDialog()
+            setOpen2(true);
+            response();
+        }, 1000)
 
     }
 
@@ -234,7 +293,7 @@ const Car = () => {
                                                 </CardContent>
                                             </CardActionArea>
                                             <CardActions>
-                                                <Button size="small" variant="contained" color="primary">
+                                                <Button size="small" variant="contained" color="primary" onClick={() => handleClickOpen2(item.id, item.name, item.precio, item.image, item.quantity)}>
                                                     Comprar
                                                 </Button>
                                             </CardActions>
@@ -247,6 +306,26 @@ const Car = () => {
                 </Grid>
             </Box>
         </Grid>
+
+        <Snackbar open={open2} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
+            <Alert severity="success">Comprado</Alert>
+        </Snackbar>
+
+        {/**Dialog */}
+        <Dialog
+            open={openDialog}
+            onClose={handleCloseDialog}
+        >
+            <DialogTitle>Comprar</DialogTitle>
+            <DialogContent>
+                <DialogContentText>Esta seguro?</DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={BuyOneProduct}>Comprar</Button>
+                <Button onClick={handleCloseDialog}>Cancelar</Button>
+            </DialogActions>
+        </Dialog>
+
         <Backdrop
             sx={{ color: '#7eb8cf', zIndex: (theme) => theme.zIndex.drawer }}
             open={Loading2}

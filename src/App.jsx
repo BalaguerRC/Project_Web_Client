@@ -11,6 +11,7 @@ import Car from "./pages/Car/car"
 import Profile from './pages/auth/profile'
 import Perfil from './pages/auth/Perfil/perfil'
 import { AuthLayout, LoginLayout } from "./components/AuthLayout.jsx"
+import Historia from './pages/auth/Perfil/historia'
 
 function App() {
   //const [count, setCount] = useState(0)
@@ -60,6 +61,10 @@ function App() {
                 {
                   index: true,
                   element: <Perfil />,
+                },
+                {
+                  path:"historia",
+                  element: <Historia/>
                 }
               ]
             },

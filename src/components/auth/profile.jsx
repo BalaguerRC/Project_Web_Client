@@ -2,6 +2,8 @@ import { Box, Breadcrumbs, Button, CircularProgress, Container, Divider, Grid, L
 import { Outlet, useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import HistoryIcon from '@mui/icons-material/History';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useState } from "react";
 
 const Profile = () => {
@@ -37,16 +39,16 @@ const Profile = () => {
                     }}
                 >
                     <Paper>
-                        <Grid container item spacing={{ xs: 1, md: 0 }} columns={{ xs: 2, sm: 8, md: 10 }} sx={{ height: 357 }}>
-                            <Grid item xs={2} sm={8} md={4}>
+                        <Grid container item spacing={{ xs: 1, md: 0 }} columns={{ xs: 2, sm: 7, md: 10 }} sx={{ height: 357 }}>
+                            <Grid item xs={2} sm={8} md={5}>
                                 <Typography variant="h4" pt={1} pb={1}>
-                                    <Button variant='text'>
+                                    <Button variant='text' onClick={()=>navigate("/")}>
                                         {"< - "}
                                     </Button>Home
                                 </Typography>
                                 <Divider></Divider>
                                 <Grid container direction={"column"} justifyContent={"flex-end"}>
-                                    <Paper sx={{ height: 301 }}>
+                                    <Paper sx={{ height: 299 }}>
                                         <MenuList sx={{ display: "grid" }}>
                                             <MenuItem onClick={() => navigate("/profile")}>
                                                 <ListItemIcon>
@@ -54,11 +56,17 @@ const Profile = () => {
                                                 </ListItemIcon>
                                                 <ListItemText>Perfil</ListItemText>
                                             </MenuItem>
-                                            <MenuItem disabled>
-                                                <ListItemText>Historia</ListItemText>
+                                            <MenuItem onClick={() => navigate("historia")}>
+                                                <ListItemIcon>
+                                                    <HistoryIcon/>
+                                                </ListItemIcon>
+                                                <ListItemText>Historial</ListItemText>
                                             </MenuItem>
                                             <MenuItem disabled>
-                                                <ListItemText>Opciones</ListItemText>
+                                                <ListItemIcon>
+                                                    <SettingsIcon/>
+                                                </ListItemIcon>
+                                                <ListItemText>Opciones Avanzadas</ListItemText>
                                             </MenuItem>
                                             <Divider />
                                             <MenuItem sx={{ marginTop: 15 }}
@@ -82,7 +90,7 @@ const Profile = () => {
 
                             </Grid>
                             <Grid item xs={2} sm={8} md>
-                                <Paper sx={{ height: 357 }}>
+                                <Paper sx={{ height: 358 }}>
                                     <Outlet />
                                 </Paper>
                             </Grid>

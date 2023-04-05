@@ -20,19 +20,19 @@ const Perfil = () => {
             <Divider>Datos</Divider>
             <Grid container direction={"row"} alignItems="flex-end" marginBottom={1} marginTop={1}>
                 <Typography variant="button">
-                    Nombre:
+                    - Nombre:
                 </Typography>
                 <Typography variant="caption" color={"text.secondary"}>{getData.name}</Typography>
             </Grid>
             <Grid container direction={"row"} alignItems="flex-end" marginBottom={1} marginTop={1}>
                 <Typography variant="button">
-                    Correo:
+                    - Correo:
                 </Typography>
                 <Typography variant="caption" color={"text.secondary"}>{getData.email}</Typography>
             </Grid>
             <Grid container direction={"row"} alignItems="flex-end" marginBottom={1} marginTop={1}>
                 <Typography variant="button">
-                    Fecha de nacimiento:
+                    - Fecha de nacimiento:
                 </Typography>
                 <Typography variant="caption" color={"text.secondary"}>{getData.date.substr(0, 10)}</Typography>
             </Grid>

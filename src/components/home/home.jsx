@@ -16,7 +16,7 @@ const Home = () => {
     const [Loading, setLoading] = useState(false)
     //const [Error, seTError] = useState(false)
 
-    const getData= JSON.parse(localStorage.getItem("DATA"))
+    const getData = JSON.parse(localStorage.getItem("DATA"))
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -36,10 +36,14 @@ const Home = () => {
     const navigate = useNavigate();
 
     const Logout = () => {
-        localStorage.removeItem("Token");
-        localStorage.removeItem("DATA");
-        localStorage.removeItem("Carrito")
-        navigate("/login");
+        setTimeout(() => {
+            setLoading(!Loading)
+            localStorage.removeItem("Token");
+            localStorage.removeItem("DATA");
+            localStorage.removeItem("Carrito")
+            navigate("/login");
+        }, 1500)
+
     }
 
     const [carritoNumber, setCarritoNumber] = useState(0);
@@ -127,7 +131,7 @@ const Home = () => {
                                 <Divider />
                                 <MenuItem onClick={() => navigate("products")}>
                                     <IconButton >
-                                        <InfoIcon/>
+                                        <InfoIcon />
                                     </IconButton>
                                     About
                                 </MenuItem>
@@ -192,9 +196,9 @@ const Home = () => {
                                 :
                                 (
                                     <>
-                                        <Tooltip title="Open settings">
+                                        <Tooltip title="Opciones">
                                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                                <Avatar alt="Remy Sharp" >{getData.name.substr(0,1)}</Avatar>
+                                                <Avatar alt="Remy Sharp" >{getData.name.substr(0, 1)}</Avatar>
                                             </IconButton>
                                         </Tooltip>
                                         <Menu
@@ -216,18 +220,21 @@ const Home = () => {
                                             <MenuItem onClick={() => {
                                                 handleCloseUserMenu()
                                                 navigate("profile")
-                                                }}>
+                                            }}>
                                                 <ListItemIcon>
-                                                    <AccountCircleIcon/>
+                                                    <AccountCircleIcon />
                                                 </ListItemIcon>
-                                                <Typography textAlign="center">Profile</Typography>
+                                                <Typography textAlign="center">Perfil</Typography>
                                             </MenuItem>
                                             <Divider />
-                                            <MenuItem onClick={() => Logout()}>
+                                            <MenuItem onClick={() => {
+                                                setLoading(!Loading)
+                                                Logout()
+                                            }}>
                                                 <ListItemIcon>
-                                                    <LogoutIcon/>
+                                                    <LogoutIcon />
                                                 </ListItemIcon>
-                                                <Typography textAlign="center">Logout</Typography>
+                                                <Typography textAlign="center">Cerrar sesion</Typography>
                                             </MenuItem>
 
                                         </Menu>
@@ -240,7 +247,7 @@ const Home = () => {
 
             </AppBar>
         </header>
-        <Grid paddingTop={9} sx={{minHeight: "100vh", display:"flex", flexDirection: "column"}}>
+        <Grid paddingTop={9} sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
             <Outlet />
         </Grid>
         <Backdrop
@@ -250,8 +257,8 @@ const Home = () => {
             <CircularProgress color="inherit" />
         </Backdrop>
 
-        <footer style={{"height": "100%"}}>
-            <Box sx={{ textAlign: "center", position:"static" }}>
+        <footer style={{ "height": "100%" }}>
+            <Box sx={{ textAlign: "center", position: "static" }}>
                 <Typography variant="h7">
                     Copyright © 2023 - All right reserved by NOTHING
                 </Typography>
