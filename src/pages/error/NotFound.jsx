@@ -1,7 +1,7 @@
-const NotFound=()=>{
-    return <div>
-        404 - Not Found
-    </div>
+import NotFound from "../../components/error/NotFound";
+
+const NotFoundP=()=>{
+    return <NotFound/>
 }
 
-export default NotFound;
+export default NotFoundP;
