@@ -1,6 +1,8 @@
 import { Alert, Backdrop, Box, Breadcrumbs, Button, ButtonGroup, Card, CardActionArea, CardActions, CardContent, CardMedia, Chip, CircularProgress, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, Link, List, ListItem, Paper, Snackbar, Stack, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ProductCarItem from "./productCarItem";
+import Delete from "@mui/icons-material/Delete"
 
 export const Carrito = JSON.parse(localStorage.getItem("Carrito")) || [];
 
@@ -9,13 +11,14 @@ const Car = () => {
     //const [precioTotal, setPrecioTotal] = useState(0);
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
+    const [open3, setOpen3] = useState(false);
 
     const [Loading2, setLoading2] = useState(false)
 
     const getToken = localStorage.getItem("Token");
 
     const Buy = async (id, quantity) => {
-        //console.log(id, quantity)
+        console.log("esto es:", id, quantity)
         fetch(import.meta.env.VITE_URL + "/ProductsPag/" + id, {
             method: "PUT",
             headers: {
@@ -29,9 +32,8 @@ const Car = () => {
             if (data.succes === true) {
                 console.log("data es: " + data)
                 /**Fix */
-                localStorage.removeItem("Carrito");
+                //localStorage.removeItem("Carrito");
                 response();
-                //
             }
             console.log(data)
         }).catch(err => {
@@ -39,7 +41,6 @@ const Car = () => {
             //handleClose();
         })
         handleClose();
-
     }
 
     /**
@@ -47,28 +48,27 @@ const Car = () => {
      */
     const [openDialog, setOpenDialog] = useState(false);
 
-    const handleClickDialog = () => {
-        setOpenDialog(true)
-    }
     const handleCloseDialog = () => {
         setOpenDialog(false)
     }
 
+    /**
+     * Dialog Delete
+     */
+    const [openDialog2, setOpenDialog2] = useState(false);
+
+    const handleCloseDialog2 = () => {
+        setOpenDialog2(false)
+    }
+
     {/**only one */ }
-    const handleClose2 = () => {
-        setOpen2(false);
-    };
+
     const [localId, setlocalId] = useState()
-    const [localname, setlocalname] = useState()
-    const [localprecio, setlocalprecio] = useState()
-    const [localimage, setlocalimage] = useState()
     const [localQuantity, setlocalQuantity] = useState()
-    const handleClickOpen2 = (id, name, precio, image, quantity) => {
+
+    const handleClickOpen2 = (id, quantity) => {
         if (Carrito != 0) {
             setlocalId(id)
-            setlocalname(name)
-            setlocalprecio(precio)
-            setlocalimage(image)
             setlocalQuantity(quantity)
             setOpenDialog(true);
         }
@@ -82,8 +82,8 @@ const Car = () => {
                     console.log("uno igual", carrito2[i])
                     /*const index= Carrito.indexOf(localId,i)
                     */
-                    console.log("esto es id:" ,localId, " cantidad:",localQuantity)
-                    Buy(localId,localQuantity-1)
+                    console.log("esto es id:", localId, " cantidad:", localQuantity)
+                    Buy(localId, localQuantity - 1)
                     setlocalId()
                     setlocalQuantity()
                     Carrito.splice(i, 1)
@@ -96,6 +96,38 @@ const Car = () => {
             response();
         }, 1000)
 
+    }
+
+    const handleClickOpenDelete = (id, quantity) => {
+        if (Carrito != 0) {
+            setlocalId(id)
+            setlocalQuantity(quantity)
+            setOpenDialog2(true);
+        }
+    };
+
+    const DeleteOneProduct = () => {
+        setTimeout(() => {
+            for (let i in carrito2) {
+                if (localId === carrito2[i].id) {
+                    console.log("posicion", i)
+                    console.log("uno igual", carrito2[i])
+                    /*const index= Carrito.indexOf(localId,i)
+                    */
+                    console.log("esto es id:", localId, " cantidad:", localQuantity)
+                    //Buy(localId, localQuantity - 1)
+                    setlocalId()
+                    setlocalQuantity()
+                    Carrito.splice(i, 1)
+                    console.log(Carrito)
+                    localStorage.setItem("Carrito", JSON.stringify(Carrito))
+                }
+            }
+            setLoading(Loading)
+            handleCloseDialog2();
+            setOpen3(!open3)
+            response();
+        }, 1000);
     }
 
     const handleClickOpen = () => {
@@ -115,6 +147,7 @@ const Car = () => {
                 setLoading(!Loading)
             }, 2000)
         }
+        localStorage.removeItem("Carrito");
     }
 
     const removeProductCar = () => {
@@ -134,7 +167,6 @@ const Car = () => {
 
     const response = () => {
         const getCarrito = JSON.parse(localStorage.getItem("Carrito"))
-        //localStorage.setItem("Carrito", getCarrito)
         setCarrito(getCarrito)
         console.log(carrito2)
     }
@@ -189,7 +221,7 @@ const Car = () => {
                                         Cantidad: {Carrito.length}
                                     </Typography>
                                 </Grid>
-                                {carrito2 == null ?
+                                {carrito2 == null || carrito2 == 0 ?
                                     (
                                         <Grid container direction={"row"} justifyContent="flex-end" alignItems={"center"}>
                                             <ButtonGroup variant="outlined" >
@@ -216,7 +248,7 @@ const Car = () => {
                             maxWidth={"xs"}
                         >
                             <DialogTitle id="alert-dialog-title">
-                                Comprar Todo
+                                Comprar todo
                             </DialogTitle>
                             <Divider />
                             <DialogContent>
@@ -226,7 +258,7 @@ const Car = () => {
                                         <Typography variant="subtitle1" gutterBottom key={value} color={"text.secondary"}>{item.name} - ${item.precio}</Typography>
                                     )}
                                     <Typography variant="subtitle1" color={"text.secondary"}>
-                                        Precio total: ${PrecioTotal.current}
+                                        Precio total: ${PrecioTotal.current} y Cantidad: {Carrito.length}
                                     </Typography>
                                 </DialogContentText>
                             </DialogContent>
@@ -245,7 +277,7 @@ const Car = () => {
                             paddingTop={1}
                             justifyContent="center">
                             <Grid container item spacing={5}>
-                                {carrito2 == null ?
+                                {carrito2 == null || carrito2 == 0 ?
                                     (
                                         <Grid item xs>
                                             <Paper sx={{ padding: 3, display: "grid", alignItems: "center", justifyContent: "center" }} elevation={2}>
@@ -258,43 +290,19 @@ const Car = () => {
                                     :
                                     null
                                 }
+
                                 {carrito2 && carrito2.map((item, value) => {
-                                    //const num1= item.precio
-                                    //setPrecioTotal({precio: item.precio});
-                                    //console.log(num1)
-                                    //const num1=  parseFloat(precioTotal)
                                     return <Grid item xs={6} md={3} key={value}>
                                         <Card sx={{ maxWidth: 345, minWidth: 100, backgroundColor: "#2b3246" }} variant="outlined   ">
-                                            <CardActionArea onClick={() => navigate("/products/details/" + item.id)}>
-                                                <CardMedia
-                                                    component="img"
-                                                    height="140"
-                                                    image={item.image == null ? "/src/assets/signo.png" : item.image}
-                                                    alt="green iguana"
-                                                />
-                                                <CardContent>
-                                                    <Box sx={{ my: 0.1, mx: 0 }}>
-                                                        <Grid container alignItems="center">
-                                                            <Grid item xs>
-                                                                <Typography gutterBottom variant="h6" component="div">
-                                                                    {item.name}
-                                                                </Typography>
-                                                            </Grid>
-                                                            <Grid item>
-                                                                <Typography gutterBottom variant="subtitle1" component="div">
-                                                                    ${item.precio}
-                                                                </Typography>
 
-                                                            </Grid>
-                                                        </Grid>
-                                                    </Box>
-                                                    <Divider />
+                                            <ProductCarItem id={item.id} name={item.name} price={item.precio} image={item.image} />
 
-                                                </CardContent>
-                                            </CardActionArea>
                                             <CardActions>
-                                                <Button size="small" variant="contained" color="primary" onClick={() => handleClickOpen2(item.id, item.name, item.precio, item.image, item.quantity)}>
+                                                <Button size="small" variant="contained" color="primary" onClick={() => handleClickOpen2(item.id, item.quantity)}>
                                                     Comprar
+                                                </Button>
+                                                <Button size="small" variant="outlined" color="primary" startIcon={<Delete />} onClick={() => handleClickOpenDelete(item.id, item.quantity)}>
+                                                    Eliminar
                                                 </Button>
                                             </CardActions>
                                         </Card>
@@ -307,8 +315,11 @@ const Car = () => {
             </Box>
         </Grid>
 
-        <Snackbar open={open2} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
+        <Snackbar open={open2} autoHideDuration={3000} onClose={() => setOpen2(!open2)} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
             <Alert severity="success">Comprado</Alert>
+        </Snackbar>
+        <Snackbar open={open3} autoHideDuration={1000} onClose={() => setOpen3(!open3)} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
+            <Alert severity="success">Eliminado</Alert>
         </Snackbar>
 
         {/**Dialog */}
@@ -323,6 +334,25 @@ const Car = () => {
             <DialogActions>
                 <Button onClick={BuyOneProduct}>Comprar</Button>
                 <Button onClick={handleCloseDialog}>Cancelar</Button>
+            </DialogActions>
+        </Dialog>
+        {/**Dialog Delete*/}
+        <Dialog
+            open={openDialog2}
+            onClose={handleCloseDialog2}
+        >
+            <DialogTitle>Eliminar</DialogTitle>
+            <DialogContent>
+                <DialogContentText>Esta seguro de eliminar el producto?</DialogContentText>
+
+            </DialogContent>
+            <DialogActions>
+                {Loading ? (<CircularProgress size={30} />) : null}
+                <Button onClick={() => {
+                    setLoading(!Loading)
+                    DeleteOneProduct()
+                }}>Eliminar</Button>
+                <Button onClick={handleCloseDialog2}>Cancelar</Button>
             </DialogActions>
         </Dialog>
 

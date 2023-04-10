@@ -4,18 +4,19 @@
 //import { AspectRatio } from "@mui/icons-material";
 import { InfoOutlined } from '@mui/icons-material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import { Alert, Avatar, Box, Breadcrumbs, Button, ButtonBase, Card, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, IconButton, Link, Paper, Snackbar, Typography } from "@mui/material";
+import { Alert, Box, Breadcrumbs, Button, ButtonBase, Card, CardMedia, CircularProgress, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, IconButton, Link, Paper, Snackbar, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { AddCar, Carrito } from '../car/car';
-import { CarritoCantidad } from '../home/home';
+import {useNavigate, useParams } from "react-router-dom";
+import { AddCar } from '../car/car';
 
 const Details = () => {
 
     const { id } = useParams();
     console.log(id)
     const [Product, setProduct] = useState({});
-    const [LoadData, setLoadData] = useState();
+    const [Loading, setLoading] = useState(false)
+    const [Loading2, setLoading2] = useState(false)
+
 
     const getToken = localStorage.getItem("Token");
 
@@ -37,8 +38,7 @@ const Details = () => {
                 quantity: data.data.quantity,
                 date: data.data.date.slice(0, 10)
             })
-            setLoadData(true);
-
+            //setLoadData(true);
         })
         console.log(Product)
         const getCarrito = JSON.parse(localStorage.getItem("Carrito"))
@@ -47,12 +47,12 @@ const Details = () => {
 
     const [openDialog, setOpenDialog] = useState(false);
 
-    const handleClickDialog = () => {
-        setOpenDialog(true)
-    }
-    const handleCloseDialog = () => {
-        setOpenDialog(false)
-    }
+    // const handleClickDialog = () => {
+    //     setOpenDialog(true)
+    // }
+    // const handleCloseDialog = () => {
+    //     setOpenDialog(false)
+    // }
 
     const Buy = async (id, quantity) => {
         console.log(id, quantity)
@@ -81,33 +81,36 @@ const Details = () => {
 
     const navigate = useNavigate();
 
-    const AddCarrito = async (data) => {
-        const Valid = false
+    const AddCarrito = (data) => {
+        let Valid = false;
         const Carrito = JSON.parse(localStorage.getItem("Carrito"))
-        for (let i in Carrito) {
-            if (data.id === Carrito[i].id) {
-                console.log("uno igual")
-                alert("Ya tiene este producto guardado")
-                Valid = !Valid;
+        setTimeout(() => {
+            for (let i in Carrito) {
+                if (data.id === Carrito[i].id) {
+                    console.log("uno igual")
+                    alert("Ya tiene este producto guardado")
+                    setLoading2(Loading2)
+                    Valid = !Valid;
+                }
             }
-        }
-        if (!Valid) {
-            AddCar(data);
-        }
+            if (!Valid) {
+                AddCar(data);
+                setLoading2(Loading2)
+                setOpen(true)
+            }
+        }, 1500)
+    }
+
+    const BuyProduct = () => {
+        setTimeout(() => {
+            Buy(Product.id, Product.quantity - 1);
+            setLoading(!Loading2);
+            setOpenDialog(false)
+        }, 1500);
     }
 
     const [open, setOpen] = useState(false);
 
-    const handleClick = () => {
-        setOpen(true)
-    }
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpen(false)
-    }
     return <>
         <Box>
             <Grid container
@@ -116,7 +119,7 @@ const Details = () => {
                 alignItems="center">
                 <Container fixed>
                     <Grid>
-                        <Typography variant="h4" gutterBottom sx={{ display: "flex", alignItems: "flex-end" }}> 
+                        <Typography variant="h4" gutterBottom sx={{ display: "flex", alignItems: "flex-end" }}>
                             <Button variant='text' onClick={() => navigate("/products")}>
                                 {"< - "}
                             </Button>Detalles del Producto
@@ -259,7 +262,7 @@ const Details = () => {
                                                         // sx={{backgroundColor: "#7ecfbe"}}
                                                         onClick={() => {
                                                             //Buy(Product.id, Product.quantity - 1)
-                                                            handleClickDialog()
+                                                            setOpenDialog(true)
                                                         }}
                                                     >
                                                         Comprar
@@ -294,13 +297,12 @@ const Details = () => {
                                                                 quantity: Product.quantity
 
                                                             }
+                                                            setLoading2(!Loading2)
                                                             AddCarrito(data)
-
-                                                            handleClick();
-                                                            //Carrito.push({id:id,name: Product.name})
                                                         }}
                                                     >
                                                         Guardar
+                                                        {Loading2 ? (<CircularProgress size={20} />) : null}
                                                     </Button>
                                                 )
                                             }
@@ -319,25 +321,26 @@ const Details = () => {
 
             </Grid>
         </Box>
-        <Snackbar open={open} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
+        <Snackbar open={open} autoHideDuration={2000} onClose={() => setOpen(!open)} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
             <Alert severity="success">Guardado en Carrito</Alert>
         </Snackbar>
 
         {/**Dialog */}
         <Dialog
             open={openDialog}
-            onClose={handleCloseDialog}
+            onClose={()=>setOpenDialog(false)}
         >
             <DialogTitle>Comprar</DialogTitle>
             <DialogContent>
-                <DialogContentText>Esta seguro?</DialogContentText>
+                <DialogContentText>Esta seguro de comprar este producto?</DialogContentText>
             </DialogContent>
             <DialogActions>
+                {Loading ? (<CircularProgress size={30} />) : null}
                 <Button onClick={() => {
-                    Buy(Product.id, Product.quantity - 1)
-                    handleCloseDialog()
+                    setLoading(!Loading)
+                    BuyProduct()
                 }}>Comprar</Button>
-                <Button onClick={handleCloseDialog}>Cancelar</Button>
+                <Button onClick={()=>setOpenDialog(false)}>Cancelar</Button>
             </DialogActions>
         </Dialog>
     </>

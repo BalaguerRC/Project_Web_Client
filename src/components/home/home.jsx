@@ -13,8 +13,7 @@ const Home = () => {
     const getToken = localStorage.getItem("Token");
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
-    const [Loading, setLoading] = useState(false)
-    //const [Error, seTError] = useState(false)
+    const [Loading, setLoading] = useState(false);
 
     const getData = JSON.parse(localStorage.getItem("DATA"))
 
@@ -37,7 +36,7 @@ const Home = () => {
 
     const Logout = () => {
         setTimeout(() => {
-            setLoading(!Loading)
+            setLoading(Loading)
             localStorage.removeItem("Token");
             localStorage.removeItem("DATA");
             localStorage.removeItem("Carrito")
@@ -55,13 +54,12 @@ const Home = () => {
         }
 
     }
-
     useEffect(() => {
         CantidadCarrito();
-    }, [carritoNumber])
+    },[])
     return <div>
         <header>
-            <AppBar position="fixed" //sx={{backgroundColor: "#265c66"}}
+            <AppBar position="fixed"
             >
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
@@ -163,7 +161,7 @@ const Home = () => {
                                 Productos
                             </Button>
                             <Button
-                                sx={{ my: 2, color: 'white', display: 'block' }}
+                                sx={{ my: 2, color: 'white', display: 'block' }} disabled
                             >
                                 About
                             </Button>

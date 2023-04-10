@@ -1,5 +1,5 @@
 import { LoadingButton } from "@mui/lab";
-import { Box, Button, Card, Grid, TextField, Typography, OutlinedInput, Link, Divider } from "@mui/material";
+import { Box, Button, Card, Grid, TextField, Typography, OutlinedInput, Link, Divider, Paper } from "@mui/material";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -8,9 +8,7 @@ const Login = () => {
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
     const [error, setError] = useState(null);
-    const [Loading, setLoading] = useState(false)
-
-
+    const [Loading, setLoading] = useState(false);
 
     const onChangeEmail = (e) => {
         setEmail(e.target.value)
@@ -78,19 +76,22 @@ const Login = () => {
             alignItems={"center"}
             position={"absolute"}
             top={"30%"}
-            p={2}>
+            p={2}
+        >
 
-            <Card variant="outlined"    >
-                <Grid container direction={"column"} alignItems="center" sx={{
-                    width: 500,
-                    maxWidth: '100%',
-                    p: 5,
-                }}>
-                    <Typography variant="button" component={"h3"}>
+            <Card variant="outlined" sx={{borderColor: "9C9C9C", borderTopWidth: 5}}>
+                <Grid container direction={"column"} alignItems="center"
+                    sx={{
+                        width: 500,
+                        maxWidth: '100%',
+                        p: 5,
+
+                    }}>
+                    <Typography variant="button" component={"h3"} fontSize={20}>
                         Login
                     </Typography>
                     <Grid container>
-                        <Link component={"button"} underline="hover" onClick={()=>navigate("/")}>
+                        <Link component={"button"} underline="hover" onClick={() => navigate("/")}>
                             <Typography variant="button" color={"text.secondary"}>{"<-Home"}</Typography>
                         </Link>
                     </Grid>

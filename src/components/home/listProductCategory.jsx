@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom";
 
 const ListProductCategory = () => {
     const getToken = localStorage.getItem("Token");
+
+    const [open, setOpen] = useState(true);
+
     const [Error, seTError] = useState(false)
     const [image, setImage] = useState([]);
 
@@ -53,17 +56,6 @@ const ListProductCategory = () => {
     }, [])
 
     const navigate = useNavigate();
-
-    //dialog
-    const [open, setOpen] = useState(true);
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpen(false)
-    }
-    //end
 
     return <>
         <Box sx={{ backgroundColor: "#265c66", flexGrow: 1 }}>
@@ -221,11 +213,11 @@ const ListProductCategory = () => {
                 </Grid>
             </Grid >
         </Box >
-        <Snackbar open={Error ? open : null} autoHideDuration={5000} onClose={handleClose} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
+        <Snackbar open={Error ? open : null} autoHideDuration={5000} onClose={() => setOpen(!open)} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
             <Alert variant="filled" severity="warning">Token Expirado</Alert>
         </Snackbar>
         <Backdrop
-            sx={{ color: '#7eb8cf', zIndex: (theme) => theme.zIndex.drawer}}
+            sx={{ color: '#7eb8cf', zIndex: (theme) => theme.zIndex.drawer }}
             open={Loading}
         >
             <CircularProgress color="inherit" />

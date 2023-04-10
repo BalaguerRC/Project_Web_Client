@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link as LinkRouter, useNavigate } from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search';
 import Autocomplete from "@mui/material/Autocomplete"
+import ProductItem from "./productItem";
 
 const Products = () => {
 
@@ -153,12 +154,12 @@ const Products = () => {
                     justifyContent="center"
                     alignItems="center">
                     <Container fixed>
-
                         <Typography variant="h4" gutterBottom>
                             <Button variant='text' onClick={() => navigate("/")}>
                                 {"< - "}
                             </Button>Productos
                         </Typography>
+
                         <Grid container direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
                             <Breadcrumbs separator=">" aria-label="breadcrumb">
                                 <Link underline="hover" color="inherit" href="" onClick={() => navigate("/")}>
@@ -186,7 +187,7 @@ const Products = () => {
                                     value={category2}
                                     autoWidth
                                 >
-                                    <MenuItem value="">None</MenuItem>
+                                    <MenuItem value={null}>None</MenuItem>
                                     {category && category.map((item) =>
                                         <MenuItem value={item.id} key={item.id}>{item.name}</MenuItem>
                                     )}
@@ -215,22 +216,18 @@ const Products = () => {
                             </IconButton>
                         </Grid>
 
-
-                        <Divider />
+                        <Divider sx={{mt:1}}/>
 
                         <Box
-                            /*spacing={1}*/
                             paddingTop={1}
-                            justifyContent="center"
+                            justifyContent="center">
 
-                    /*spacing={2}*/>
                             <Grid container item spacing={5}>
                                 {Product && Product.map((item, value) => {
                                     return <Grid item xs={6} md={3} key={item.id}>
                                         {Loading ?
                                             (
                                                 <Stack spacing={1} sx={{ maxWidth: 345, minWidth: 100 }}>
-                                                    {/* For variant="text", adjust the height via font-size */}
                                                     <Skeleton variant="rounded" height={140} />
                                                     <Skeleton variant="rectangular" width={110} />
                                                     <Skeleton variant="rounded" width={110} />
@@ -238,61 +235,18 @@ const Products = () => {
                                             )
                                             :
                                             (
-                                                <Card sx={{ maxWidth: 345, minWidth: 100, backgroundColor: "#2b3246" }} variant="outlined">
-                                                    <CardActionArea onClick={() => navigate("/products/details/" + item.id)}>
-                                                        <CardMedia
-                                                            component="img"
-                                                            height="140"
-                                                            image={item.image == null ? "/src/assets/signo.png" : item.image}
-                                                            alt="green iguana"
-                                                        />
-
-                                                        <CardContent>
-                                                            <Box sx={{ my: 0.1, mx: 0 }}>
-                                                                <Grid container alignItems="center">
-                                                                    <Grid item xs>
-                                                                        <Typography gutterBottom variant="h6" component="div">
-                                                                            {item.name}
-                                                                        </Typography>
-                                                                    </Grid>
-                                                                    <Grid item>
-                                                                        <Typography gutterBottom variant="subtitle1" component="div">
-                                                                            ${item.precio}
-                                                                        </Typography>
-                                                                    </Grid>
-                                                                </Grid>
-                                                            </Box>
-                                                            <Divider />
-                                                            <Box sx={{ my: 0.1 }}>
-                                                                <Typography gutterBottom variant="body2">
-                                                                    Categoria:
-                                                                </Typography>
-                                                                <Stack direction="row" spacing={1}>
-                                                                    <Chip label={item.category} color="primary" />
-                                                                </Stack>
-                                                            </Box>
-                                                        </CardContent>
-                                                    </CardActionArea>
-                                                </Card>
+                                                <ProductItem id={item.id} name={item.name} price={item.precio} category={item.category} image={item.image} />
                                             )
                                         }
                                     </Grid>
                                 })}
                             </Grid>
-                            {/*<Grid item xs={6} md={3} >
-                                <Stack spacing={1} sx={{ maxWidth: 345, minWidth: 100 }}>
-                                    <Skeleton variant="rounded" height={140} />
-                                    <Skeleton variant="rectangular" width={110}/>
-                                    <Skeleton variant="rounded" width={110}  />
-                                </Stack>
-                            </Grid> */}
 
                         </Box>
                     </Container>
                     <Stack marginTop={2} marginBottom={2}>
                         <Pagination color="primary" size="large" count={totalPage} page={page} onChange={handleChange} />
                     </Stack>
-
                 </Grid>
             </Box>
             <Snackbar open={Error ? open : null} autoHideDuration={5000} onClose={handleClose} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>

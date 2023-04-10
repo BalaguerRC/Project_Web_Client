@@ -1,25 +1,7 @@
-import { Box, Button, Container, Divider, Grid, Paper, Typography } from "@mui/material";
-import { useEffect } from "react";
-import ImageProduct, { CategoryId1, CategoryId2 } from "./imageProduct";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import ListProductCategory from "./listProductCategory";
 
 const HomeView = () => {
-    const getToken = localStorage.getItem("Token");
-
-    /*const GetProduct = async () => {
-        await fetch("http://localhost:5081/api/Products", {
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer " + getToken
-            }
-        }).then(resp => resp.json()).then(data => console.log(data))
-    }
-
-    useEffect(() => {
-        //GetProductID1();
-        //GetProduct();
-    })*/
-
     return <div >
         <Box sx={{ alignItems: "center", display: "grid" }}>
             <Grid container marginTop={35} marginBottom={40} textAlign={"center"}>
