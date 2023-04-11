@@ -4,21 +4,29 @@
 //import { AspectRatio } from "@mui/icons-material";
 import { InfoOutlined } from '@mui/icons-material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import { Alert, Box, Breadcrumbs, Button, ButtonBase, Card, CardMedia, CircularProgress, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, IconButton, Link, Paper, Snackbar, Typography } from "@mui/material";
+import { Alert, Box, Breadcrumbs, Button, ButtonBase, Card, CardMedia, CircularProgress, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, Grid, IconButton, InputLabel, Link, Menu, MenuItem, Paper, Select, Snackbar, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import {useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AddCar } from '../car/car';
 
 const Details = () => {
 
     const { id } = useParams();
-    console.log(id)
+    //console.log(id)
     const [Product, setProduct] = useState({});
-    const [Loading, setLoading] = useState(false)
-    const [Loading2, setLoading2] = useState(false)
+    const [Loading, setLoading] = useState(false);
+    const [Loading2, setLoading2] = useState(false);
+    const [Cantidad, setCantidad] = useState();
+    //const [Cantidad2, setCantidad2] = useState();
+    const [CantidadProducto, setCantidadProducto] = useState(1);
+
 
 
     const getToken = localStorage.getItem("Token");
+    const CatidadSuma = (quantity) => {
+        const cantidadTotal = [...Array(quantity + 1).keys()].slice(1)
+        setCantidad(cantidadTotal)
+    }
 
     const response = async () => {
         await fetch("http://localhost:5081/api/Products/" + id, {
@@ -38,24 +46,15 @@ const Details = () => {
                 quantity: data.data.quantity,
                 date: data.data.date.slice(0, 10)
             })
-            //setLoadData(true);
+            CatidadSuma(data.data.quantity)
         })
-        console.log(Product)
         const getCarrito = JSON.parse(localStorage.getItem("Carrito"))
     }
-    //.slice(0, 10)
 
     const [openDialog, setOpenDialog] = useState(false);
 
-    // const handleClickDialog = () => {
-    //     setOpenDialog(true)
-    // }
-    // const handleCloseDialog = () => {
-    //     setOpenDialog(false)
-    // }
-
     const Buy = async (id, quantity) => {
-        console.log(id, quantity)
+        setCantidadProducto(1)
         await fetch(import.meta.env.VITE_URL + "/ProductsPag/" + id, {
             method: "PUT",
             headers: {
@@ -67,16 +66,13 @@ const Details = () => {
             })
         }).then(res => res.json()).then(data => {
             if (data.succes === true) {
-                console.log("data es: " + data)
                 response();
             }
-            console.log(data)
         }).catch(err => console.log("Error: " + err))
     }
 
     useEffect(() => {
         response()
-        console.log(Product.image)
     }, [])
 
     const navigate = useNavigate();
@@ -103,9 +99,15 @@ const Details = () => {
 
     const BuyProduct = () => {
         setTimeout(() => {
-            Buy(Product.id, Product.quantity - 1);
-            setLoading(!Loading2);
-            setOpenDialog(false)
+            setLoading(Loading);
+            setOpenDialog(false);
+            if (CantidadProducto > 1) {
+                Buy(Product.id, Product.quantity - CantidadProducto);
+            }
+            else {
+                Buy(Product.id, Product.quantity - 1);
+            }
+
         }, 1500);
     }
 
@@ -262,7 +264,10 @@ const Details = () => {
                                                         // sx={{backgroundColor: "#7ecfbe"}}
                                                         onClick={() => {
                                                             //Buy(Product.id, Product.quantity - 1)
+                                                            //CantidadSuma2()
+                                                            //console.log(Cantidad)
                                                             setOpenDialog(true)
+
                                                         }}
                                                     >
                                                         Comprar
@@ -318,7 +323,6 @@ const Details = () => {
                         </Paper>
                     </Box>
                 </Container>
-
             </Grid>
         </Box>
         <Snackbar open={open} autoHideDuration={2000} onClose={() => setOpen(!open)} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
@@ -328,19 +332,45 @@ const Details = () => {
         {/**Dialog */}
         <Dialog
             open={openDialog}
-            onClose={()=>setOpenDialog(false)}
+            onClose={() => setOpenDialog(false)}
         >
             <DialogTitle>Comprar</DialogTitle>
             <DialogContent>
                 <DialogContentText>Esta seguro de comprar este producto?</DialogContentText>
+                <DialogContentText>- Si desea, especifique la cantidad que desea comprar:</DialogContentText>
+                <FormControl sx={{ m: 1, minWidth: 120 }} variant="standard">
+                    <InputLabel id="demo-simple-select-autowidth-label">Cantidad</InputLabel>
+                    <Select
+                        autoWidth
+                        onChange={(event) => setCantidadProducto(event.target.value)}
+                        value={CantidadProducto}
+                    >
+                        <MenuItem value={1}>1</MenuItem>
+                        {Cantidad && Cantidad.map((item, index) => {
+                            //console.log(item[index])
+                            if (item <= 10) {
+                                if (item === 1) {
+                                    null
+                                }
+                                else {
+                                    return <MenuItem value={item} key={index}>{item} {item === 10 ? "MAX" : null}</MenuItem>
+                                }
+                            } else {
+                                null
+                            }
+                        })}
+                        {/*Cantidad && CantidadSuma2()*/}
+                    </Select>
+                </FormControl>
             </DialogContent>
             <DialogActions>
                 {Loading ? (<CircularProgress size={30} />) : null}
                 <Button onClick={() => {
                     setLoading(!Loading)
                     BuyProduct()
+                    //console.log(CantidadProducto)
                 }}>Comprar</Button>
-                <Button onClick={()=>setOpenDialog(false)}>Cancelar</Button>
+                <Button onClick={() => setOpenDialog(false)}>Cancelar</Button>
             </DialogActions>
         </Dialog>
     </>
