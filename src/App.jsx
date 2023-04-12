@@ -13,6 +13,7 @@ import Perfil from './pages/auth/Perfil/perfil'
 import { AuthLayout, LoginLayout } from "./components/AuthLayout.jsx"
 import Historia from './pages/auth/Perfil/historia'
 import Bill from './pages/Products/bill'
+import Bills from './pages/Products/bills'
 
 function App() {
   //const [count, setCount] = useState(0)
@@ -72,6 +73,10 @@ function App() {
             {
               path:"bill",
               element: <Bill/>
+            },
+            {
+              path: "bills/:id",
+              element: <Bills />
             }
           ]
         },

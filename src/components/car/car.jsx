@@ -16,7 +16,7 @@ const Car = () => {
     const [Loading2, setLoading2] = useState(false)
 
     const getToken = localStorage.getItem("Token");
-
+    const getDataUser = JSON.parse(localStorage.getItem("DATA"))
     const Buy = async (id, quantity) => {
         console.log("esto es:", id, quantity)
         fetch(import.meta.env.VITE_URL + "/ProductsPag/" + id, {
@@ -139,15 +139,52 @@ const Car = () => {
 
     //progress
     const [Loading, setLoading] = useState(false)
+    const List = [];
+    const report = {
+        data: List,
+        id_user: getDataUser.id
+    }
     const handleClickBuy = () => {
+
         setLoading(!Loading)
+
+        //console.log(report)
+        //localStorage.setItem("Report", JSON.stringify(report))
         for (let i in carrito2) {
             setTimeout(() => {
-                Buy(carrito2[i].id, carrito2[i].quantity - 1)
+                //Buy(carrito2[i].id, carrito2[i].quantity - 1)
+                const datos = {
+                    id_prod: carrito2[i].id,
+                    prod_name: carrito2[i].name,
+                    quantity: carrito2[i].quantity,
+                    price: carrito2[i].precio
+                }
+                //console.log(report)
+                List.push(datos)
+                localStorage.setItem("Report", JSON.stringify(report))
                 setLoading(!Loading)
             }, 2000)
+
         }
-        localStorage.removeItem("Carrito");
+        /**
+         * const report = {
+                    data: [
+                        {
+                            id_prod: carrito2[i].id,
+                            prod_name: carrito2[i].name,
+                            quantity: carrito2[i].quantity,
+                            price: carrito2[i].precio
+                        }
+                    ],
+                    id_user: getDataUser.id
+                }
+         */
+        //console.log(List)
+        //localStorage.removeItem("Carrito");
+    }
+    const Actualizar = () => {
+        const get = JSON.parse(localStorage.getItem("Report"));
+        console.log(get)
     }
 
     const removeProductCar = () => {
@@ -157,6 +194,7 @@ const Car = () => {
             response();
             console.log("test")
             setLoading2(Loading2 === true)
+            Carrito= []
         }, 2000)
     }
 
@@ -268,6 +306,7 @@ const Car = () => {
                                 <Button onClick={handleClickBuy} autoFocus>
                                     Comprar
                                 </Button>
+                                <Button onClick={Actualizar}>Actualizar</Button>
                                 <Button onClick={handleClose}>Cancelar</Button>
                             </DialogActions>
                         </Dialog>

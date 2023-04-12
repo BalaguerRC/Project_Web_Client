@@ -19,8 +19,10 @@ const Details = () => {
     const [Cantidad, setCantidad] = useState();
     //const [Cantidad2, setCantidad2] = useState();
     const [CantidadProducto, setCantidadProducto] = useState(1);
+    const getDataUser = JSON.parse(localStorage.getItem("DATA"))
 
 
+    const [maxID, setMaxID] = useState();
 
     const getToken = localStorage.getItem("Token");
     const CatidadSuma = (quantity) => {
@@ -97,19 +99,84 @@ const Details = () => {
         }, 1500)
     }
 
-    const BuyProduct = () => {
-        setTimeout(() => {
-            setLoading(Loading);
-            setOpenDialog(false);
-            if (CantidadProducto > 1) {
-                Buy(Product.id, Product.quantity - CantidadProducto);
-            }
-            else {
-                Buy(Product.id, Product.quantity - 1);
-            }
+    /**factura */
 
-        }, 1500);
+    const getReport = JSON.parse(localStorage.getItem("Report"))
+    //console.log(getReport)
+
+    let totalPrice = getReport.data[0].price * getReport.data[0].quantity
+    const MaxId = async () => {
+        await fetch(import.meta.env.VITE_URL + "/Compra", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + getToken
+            },
+        }).then(res => res.json()).then(data => {
+            setMaxID(data.id)
+            console.log(data.id)
+        })
     }
+    const Post = (reporte) => {
+        fetch(import.meta.env.VITE_URL + "/Compra", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + getToken
+            },
+            body: JSON.stringify(reporte)
+        }).then(res => res.json()).then(data => console.log(data)).catch(err => console.log(err))
+    }
+    const Response = () => {
+        for (let i in getReport.data) {
+            const reporte = {
+                id_compra: maxID + 1,
+                id_user: getReport.id_user,
+                id_product: getReport.data[i].id_prod,
+                amount: getReport.data[i].quantity,
+                price: totalPrice.toFixed(2)
+            }
+            //console.log(reporte)
+            Post(reporte)
+        }
+
+    }
+    const BuyProduct = () => {
+
+        //IdProduct,ProductName,quantity,Price,userName,userEmail
+        /*setTimeout(() => {
+             setLoading(Loading);
+             setOpenDialog(false);
+             if (CantidadProducto > 1) {
+                 Buy(Product.id, Product.quantity - CantidadProducto);
+             }
+             else {
+                 Buy(Product.id, Product.quantity - 1);
+             }
+ 
+         }, 1500);*/
+        
+
+        const report = {
+            data: [
+                {
+                    id_prod: Product.id,
+                    prod_name: Product.name,
+                    quantity: CantidadProducto,
+                    price: Product.precio
+                }
+            ],
+            id_user: getDataUser.id
+        }
+        console.log(report)
+        localStorage.setItem("Report", JSON.stringify(report))
+        setTimeout(() => {
+            Response()
+        }, 1000)
+    }
+
+    useEffect(() => {
+        MaxId()
+    }, [])
 
     const [open, setOpen] = useState(false);
 
@@ -266,6 +333,7 @@ const Details = () => {
                                                             //Buy(Product.id, Product.quantity - 1)
                                                             //CantidadSuma2()
                                                             //console.log(Cantidad)
+                                                            
                                                             setOpenDialog(true)
 
                                                         }}
@@ -367,6 +435,7 @@ const Details = () => {
                 {Loading ? (<CircularProgress size={30} />) : null}
                 <Button onClick={() => {
                     setLoading(!Loading)
+                    localStorage.removeItem("Report")
                     BuyProduct()
                     //console.log(CantidadProducto)
                 }}>Comprar</Button>
