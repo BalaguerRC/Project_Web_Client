@@ -101,10 +101,12 @@ const Details = () => {
 
     /**factura */
 
-    const getReport = JSON.parse(localStorage.getItem("Report"))
+    /*const AwaitReport=()=>{
+        setReporte(JSON.parse(localStorage.getItem("Report")));
+        console.log("reporte",Reporte)
+    }*/
     //console.log(getReport)
 
-    let totalPrice = getReport.data[0].price * getReport.data[0].quantity
     const MaxId = async () => {
         await fetch(import.meta.env.VITE_URL + "/Compra", {
             method: "GET",
@@ -124,23 +126,57 @@ const Details = () => {
                 "Authorization": "Bearer " + getToken
             },
             body: JSON.stringify(reporte)
-        }).then(res => res.json()).then(data => console.log(data)).catch(err => console.log(err))
+        }).then(res => res.json()).then(data => {
+            console.log(data)
+            localStorage.removeItem("Report")
+        }).catch(err => console.log(err))
     }
-    const Response = () => {
-        for (let i in getReport.data) {
+    const Post2=(report)=>{
+        console.log(report)
+        fetch(import.meta.env.VITE_URL + "/Report", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + getToken
+            },
+            body: JSON.stringify(report)
+        }).then(res => res.json()).then(data => {
+            console.log(data)
+            localStorage.removeItem("Report")
+        }).catch(err => console.log(err))
+    }
+    const Response = (ReporteNew) => {
+        //setReporte(JSON.parse(localStorage.getItem("Report")));
+        console.log("response:", ReporteNew)
+        const reporte = {
+            id_compra: maxID + 1,
+            id_user: ReporteNew.id_user,
+            id_product: ReporteNew.data[0].id_prod,
+            amount: ReporteNew.data[0].quantity,
+            price: ReporteNew.data[0].price,
+        }
+        console.log(reporte)
+        /*for (let i in Reporte.data) {
             const reporte = {
                 id_compra: maxID + 1,
-                id_user: getReport.id_user,
-                id_product: getReport.data[i].id_prod,
-                amount: getReport.data[i].quantity,
+                id_user: Reporte.id_user,
+                id_product: Reporte.data[i].id_prod,
+                amount: Reporte.data[i].quantity,
                 price: totalPrice.toFixed(2)
             }
-            //console.log(reporte)
-            Post(reporte)
-        }
+            console.log(reporte)
+            //
+        }*/
+        Post(reporte)
 
+        const report={
+            id_compra:reporte.id_compra,
+            total_price: `${reporte.price * reporte.amount}`
+        }
+        //console.log(report)
+        Post2(report)
     }
-    const BuyProduct = () => {
+    const BuyProduct = (id, name, cantidad, precio, id_user) => {
 
         //IdProduct,ProductName,quantity,Price,userName,userEmail
         /*setTimeout(() => {
@@ -154,28 +190,29 @@ const Details = () => {
              }
  
          }, 1500);*/
-        
+        //localStorage.setItem("Report", JSON.stringify(report))  
 
-        const report = {
+        const Reportenuevo = {
             data: [
                 {
-                    id_prod: Product.id,
-                    prod_name: Product.name,
-                    quantity: CantidadProducto,
-                    price: Product.precio
+                    id_prod: id,
+                    prod_name: name,
+                    quantity: cantidad,
+                    price: precio
                 }
             ],
-            id_user: getDataUser.id
+            id_user: id_user
         }
-        console.log(report)
-        localStorage.setItem("Report", JSON.stringify(report))
+        //console.log("CantidadProducto desde buy:", Reporte)
         setTimeout(() => {
-            Response()
+            Response(Reportenuevo)
         }, 1000)
     }
 
+
     useEffect(() => {
         MaxId()
+        //AwaitReport()
     }, [])
 
     const [open, setOpen] = useState(false);
@@ -333,7 +370,6 @@ const Details = () => {
                                                             //Buy(Product.id, Product.quantity - 1)
                                                             //CantidadSuma2()
                                                             //console.log(Cantidad)
-                                                            
                                                             setOpenDialog(true)
 
                                                         }}
@@ -435,8 +471,8 @@ const Details = () => {
                 {Loading ? (<CircularProgress size={30} />) : null}
                 <Button onClick={() => {
                     setLoading(!Loading)
-                    localStorage.removeItem("Report")
-                    BuyProduct()
+                    //localStorage.removeItem("Report")
+                    BuyProduct(Product.id, Product.name, CantidadProducto, Product.precio, getDataUser.id)
                     //console.log(CantidadProducto)
                 }}>Comprar</Button>
                 <Button onClick={() => setOpenDialog(false)}>Cancelar</Button>

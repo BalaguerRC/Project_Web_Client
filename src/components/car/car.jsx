@@ -7,12 +7,32 @@ import Delete from "@mui/icons-material/Delete"
 export const Carrito = JSON.parse(localStorage.getItem("Carrito")) || [];
 
 const Car = () => {
-    const [carrito2, setCarrito] = useState([])
-    //const [precioTotal, setPrecioTotal] = useState(0);
+    const [carrito2, setCarrito] = useState([]);
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
     const [open3, setOpen3] = useState(false);
+    const PrecioTotal = useRef(0);
+    const [maxID, setMaxID] = useState();
 
+    const response = () => {
+        const getCarrito = JSON.parse(localStorage.getItem("Carrito"))
+        setCarrito(getCarrito)
+        console.log(carrito2)
+    }
+    const MaxId = async () => {
+        await fetch(import.meta.env.VITE_URL + "/Compra", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + getToken
+            },
+        }).then(res => res.json()).then(data => {
+            setMaxID(data.id)
+            //console.log(data.id)
+        })
+    }
+    useEffect(() => {
+        MaxId()
+    }, [])
     const [Loading2, setLoading2] = useState(false)
 
     const getToken = localStorage.getItem("Token");
@@ -140,52 +160,81 @@ const Car = () => {
     //progress
     const [Loading, setLoading] = useState(false)
     const List = [];
-    const report = {
-        data: List,
-        id_user: getDataUser.id
-    }
-    const handleClickBuy = () => {
-
+    const Post2 = (report) => {
         setLoading(!Loading)
-
+        console.log(report)
+        fetch(import.meta.env.VITE_URL + "/Report", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + getToken
+            },
+            body: JSON.stringify(report)
+        }).then(res => res.json()).then(data => {
+            console.log(data)
+            localStorage.removeItem("Carrito")
+            response();
+        }).catch(err => console.log(err))
+    }
+    /**Factura */
+    const handleClickBuy = () => {
         //console.log(report)
         //localStorage.setItem("Report", JSON.stringify(report))
         for (let i in carrito2) {
+            //setTimeout(() => {
+            Buy(carrito2[i].id, carrito2[i].quantity - 1)
+            const datos = {
+                id_user: getDataUser.id,
+                id_prod: carrito2[i].id,
+                prod_name: carrito2[i].name,
+                quantity: 1,
+                price: carrito2[i].precio
+            }
+            List.push(datos)
+            
             setTimeout(() => {
-                //Buy(carrito2[i].id, carrito2[i].quantity - 1)
-                const datos = {
-                    id_prod: carrito2[i].id,
-                    prod_name: carrito2[i].name,
-                    quantity: carrito2[i].quantity,
-                    price: carrito2[i].precio
-                }
-                //console.log(report)
-                List.push(datos)
-                localStorage.setItem("Report", JSON.stringify(report))
-                setLoading(!Loading)
-            }, 2000)
+                Reporte(datos)
+            }, 1000)
 
+            //}, 2000)
         }
-        /**
-         * const report = {
-                    data: [
-                        {
-                            id_prod: carrito2[i].id,
-                            prod_name: carrito2[i].name,
-                            quantity: carrito2[i].quantity,
-                            price: carrito2[i].precio
-                        }
-                    ],
-                    id_user: getDataUser.id
-                }
-         */
-        //console.log(List)
+        console.log("lista carrito", List)
+        const report = {
+            id_compra: maxID + 1,
+            total_price: `${PrecioTotal.current}`
+        }
+        Post2(report)
+
         //localStorage.removeItem("Carrito");
     }
-    const Actualizar = () => {
-        const get = JSON.parse(localStorage.getItem("Report"));
-        console.log(get)
+    const Post = (reporte) => {
+        fetch(import.meta.env.VITE_URL + "/Compra", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + getToken
+            },
+            body: JSON.stringify(reporte)
+        }).then(res => res.json()).then(data => {
+            console.log(data)
+            localStorage.removeItem("Report")
+        }).catch(err => console.log(err))
     }
+
+
+    const Reporte = (datos) => {
+        //console.log("Lista desde reporte:",datos)
+        const reporte = {
+            id_compra: maxID + 1,
+            id_user: datos.id_user,
+            id_product: datos.id_prod,
+            amount: datos.quantity,
+            price: datos.price,
+        }
+        console.log("Envio:", reporte)
+        Post(reporte)
+    }
+    /**Factura */
 
     const removeProductCar = () => {
         setLoading2(!Loading2)
@@ -194,20 +243,16 @@ const Car = () => {
             response();
             console.log("test")
             setLoading2(Loading2 === true)
-            Carrito= []
+            Carrito = []
         }, 2000)
     }
 
     const handleClose = () => {
         setOpen(false);
     };
-    const PrecioTotal = useRef(0);
+    //const PrecioTotal = useRef(0);
 
-    const response = () => {
-        const getCarrito = JSON.parse(localStorage.getItem("Carrito"))
-        setCarrito(getCarrito)
-        console.log(carrito2)
-    }
+
 
     //**SUM */
     var total = 0;
@@ -303,10 +348,12 @@ const Car = () => {
                             <Divider />
                             <DialogActions>
                                 {Loading ? (<CircularProgress />) : null}
-                                <Button onClick={handleClickBuy} autoFocus>
+                                <Button onClick={() => {
+                                    setLoading(!Loading)
+                                    handleClickBuy()
+                                }} autoFocus>
                                     Comprar
                                 </Button>
-                                <Button onClick={Actualizar}>Actualizar</Button>
                                 <Button onClick={handleClose}>Cancelar</Button>
                             </DialogActions>
                         </Dialog>
