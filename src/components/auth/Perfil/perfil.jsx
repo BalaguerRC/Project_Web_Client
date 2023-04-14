@@ -1,9 +1,10 @@
-import { Avatar, Divider, Grid, Typography } from "@mui/material";
+import { Avatar, Button, Divider, Grid, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 
 const Perfil = () => {
 
     const getData = JSON.parse(localStorage.getItem("DATA"))
-    console.log(getData)
+    
     return <>
         <Grid sx={{ p: 2 }}>
             <Typography variant="button" sx={{ fontSize: 22 }}>
@@ -36,6 +37,9 @@ const Perfil = () => {
                 </Typography>
                 <Typography variant="caption" color={"text.secondary"}>{getData.date.substr(0, 10)}</Typography>
             </Grid>
+            {/*historial && historial.map((item)=>{
+                setId({id:item.id_compra})
+            })*/}
         </Grid>
     </>
 }

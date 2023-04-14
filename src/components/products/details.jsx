@@ -12,15 +12,13 @@ import { AddCar } from '../car/car';
 const Details = () => {
 
     const { id } = useParams();
-    //console.log(id)
+    
     const [Product, setProduct] = useState({});
     const [Loading, setLoading] = useState(false);
     const [Loading2, setLoading2] = useState(false);
     const [Cantidad, setCantidad] = useState();
-    //const [Cantidad2, setCantidad2] = useState();
     const [CantidadProducto, setCantidadProducto] = useState(1);
     const getDataUser = JSON.parse(localStorage.getItem("DATA"))
-
 
     const [maxID, setMaxID] = useState();
 
@@ -50,13 +48,14 @@ const Details = () => {
             })
             CatidadSuma(data.data.quantity)
         })
-        const getCarrito = JSON.parse(localStorage.getItem("Carrito"))
     }
 
     const [openDialog, setOpenDialog] = useState(false);
 
     const Buy = async (id, quantity) => {
+
         setCantidadProducto(1)
+
         await fetch(import.meta.env.VITE_URL + "/ProductsPag/" + id, {
             method: "PUT",
             headers: {
@@ -101,12 +100,6 @@ const Details = () => {
 
     /**factura */
 
-    /*const AwaitReport=()=>{
-        setReporte(JSON.parse(localStorage.getItem("Report")));
-        console.log("reporte",Reporte)
-    }*/
-    //console.log(getReport)
-
     const MaxId = async () => {
         await fetch(import.meta.env.VITE_URL + "/Compra", {
             method: "GET",
@@ -118,6 +111,7 @@ const Details = () => {
             console.log(data.id)
         })
     }
+
     const Post = (reporte) => {
         fetch(import.meta.env.VITE_URL + "/Compra", {
             method: "POST",
@@ -131,8 +125,8 @@ const Details = () => {
             localStorage.removeItem("Report")
         }).catch(err => console.log(err))
     }
-    const Post2=(report)=>{
-        console.log(report)
+
+    const Post2 = (report) => {
         fetch(import.meta.env.VITE_URL + "/Report", {
             method: "POST",
             headers: {
@@ -145,8 +139,8 @@ const Details = () => {
             localStorage.removeItem("Report")
         }).catch(err => console.log(err))
     }
+
     const Response = (ReporteNew) => {
-        //setReporte(JSON.parse(localStorage.getItem("Report")));
         console.log("response:", ReporteNew)
         const reporte = {
             id_compra: maxID + 1,
@@ -155,42 +149,25 @@ const Details = () => {
             amount: ReporteNew.data[0].quantity,
             price: ReporteNew.data[0].price,
         }
-        console.log(reporte)
-        /*for (let i in Reporte.data) {
-            const reporte = {
-                id_compra: maxID + 1,
-                id_user: Reporte.id_user,
-                id_product: Reporte.data[i].id_prod,
-                amount: Reporte.data[i].quantity,
-                price: totalPrice.toFixed(2)
-            }
-            console.log(reporte)
-            //
-        }*/
         Post(reporte)
-
-        const report={
-            id_compra:reporte.id_compra,
+        const report = {
+            id_compra: reporte.id_compra,
             total_price: `${reporte.price * reporte.amount}`
         }
-        //console.log(report)
         Post2(report)
     }
     const BuyProduct = (id, name, cantidad, precio, id_user) => {
 
-        //IdProduct,ProductName,quantity,Price,userName,userEmail
-        /*setTimeout(() => {
-             setLoading(Loading);
-             setOpenDialog(false);
-             if (CantidadProducto > 1) {
-                 Buy(Product.id, Product.quantity - CantidadProducto);
-             }
-             else {
-                 Buy(Product.id, Product.quantity - 1);
-             }
- 
-         }, 1500);*/
-        //localStorage.setItem("Report", JSON.stringify(report))  
+        setTimeout(() => {
+            setLoading(Loading);
+            setOpenDialog(false);
+            if (CantidadProducto > 1) {
+                Buy(Product.id, Product.quantity - CantidadProducto);
+            }
+            else {
+                Buy(Product.id, Product.quantity - 1);
+            }
+        }, 1500);
 
         const Reportenuevo = {
             data: [
@@ -203,16 +180,13 @@ const Details = () => {
             ],
             id_user: id_user
         }
-        //console.log("CantidadProducto desde buy:", Reporte)
         setTimeout(() => {
             Response(Reportenuevo)
         }, 1000)
     }
 
-
     useEffect(() => {
         MaxId()
-        //AwaitReport()
     }, [])
 
     const [open, setOpen] = useState(false);

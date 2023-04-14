@@ -27,7 +27,6 @@ const Car = () => {
             },
         }).then(res => res.json()).then(data => {
             setMaxID(data.id)
-            //console.log(data.id)
         })
     }
     useEffect(() => {
@@ -51,16 +50,12 @@ const Car = () => {
         }).then(res => res.json()).then(data => {
             if (data.succes === true) {
                 console.log("data es: " + data)
-                /**Fix */
-                //localStorage.removeItem("Carrito");
                 response();
             }
             console.log(data)
         }).catch(err => {
             console.log("Error: " + err)
-            //handleClose();
         })
-        handleClose();
     }
 
     /**
@@ -100,8 +95,6 @@ const Car = () => {
                 if (localId === carrito2[i].id) {
                     console.log("posicion", i)
                     console.log("uno igual", carrito2[i])
-                    /*const index= Carrito.indexOf(localId,i)
-                    */
                     console.log("esto es id:", localId, " cantidad:", localQuantity)
                     Buy(localId, localQuantity - 1)
                     setlocalId()
@@ -132,10 +125,7 @@ const Car = () => {
                 if (localId === carrito2[i].id) {
                     console.log("posicion", i)
                     console.log("uno igual", carrito2[i])
-                    /*const index= Carrito.indexOf(localId,i)
-                    */
                     console.log("esto es id:", localId, " cantidad:", localQuantity)
-                    //Buy(localId, localQuantity - 1)
                     setlocalId()
                     setlocalQuantity()
                     Carrito.splice(i, 1)
@@ -161,7 +151,6 @@ const Car = () => {
     const [Loading, setLoading] = useState(false)
     const List = [];
     const Post2 = (report) => {
-        setLoading(!Loading)
         console.log(report)
         fetch(import.meta.env.VITE_URL + "/Report", {
             method: "POST",
@@ -178,10 +167,7 @@ const Car = () => {
     }
     /**Factura */
     const handleClickBuy = () => {
-        //console.log(report)
-        //localStorage.setItem("Report", JSON.stringify(report))
         for (let i in carrito2) {
-            //setTimeout(() => {
             Buy(carrito2[i].id, carrito2[i].quantity - 1)
             const datos = {
                 id_user: getDataUser.id,
@@ -191,12 +177,12 @@ const Car = () => {
                 price: carrito2[i].precio
             }
             List.push(datos)
-            
+
             setTimeout(() => {
+                setLoading(!Loading)
+                handleClose();
                 Reporte(datos)
             }, 1000)
-
-            //}, 2000)
         }
         console.log("lista carrito", List)
         const report = {
@@ -204,8 +190,6 @@ const Car = () => {
             total_price: `${PrecioTotal.current}`
         }
         Post2(report)
-
-        //localStorage.removeItem("Carrito");
     }
     const Post = (reporte) => {
         fetch(import.meta.env.VITE_URL + "/Compra", {
