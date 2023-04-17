@@ -1,7 +1,8 @@
-import { Box, Collapse, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Collapse, IconButton, Link, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Row = ({ item,date }) => {
+const Row = ({ item, date }) => {
 
     const [history, setHistory] = useState(false);
     const [open, setOpen] = useState(false);
@@ -20,6 +21,8 @@ const Row = ({ item,date }) => {
         response()
     }
 
+    const navigate = useNavigate();
+
     /*useEffect(()=>{
         response()
     },[open])*/
@@ -37,19 +40,21 @@ const Row = ({ item,date }) => {
             </TableCell>
             <TableCell>{item}</TableCell>
             <TableCell>0</TableCell>
-            <TableCell>{date.slice(0,10)}</TableCell>
-            <TableCell>{date.slice(11,16)}</TableCell>
-            <TableCell>ver factura</TableCell>
+            <TableCell>{date.slice(0, 10)}</TableCell>
+            <TableCell>{date.slice(11, 16)}</TableCell>
+            <TableCell>
+                <Link underline="hover" component={"button"} onClick={()=>navigate("/bills/"+item)}>Ver Factura</Link>
+            </TableCell>
         </TableRow>
         <TableRow>
             <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <Box sx={{ margin: 1 }}>
                         <Typography variant="h6" gutterBottom component="div">
-                            History
+                            Productos
                         </Typography>
                         <Table size="small" aria-label="purchases">
-                            <TableHead sx={{backgroundColor: 'background.paper',}}>
+                            <TableHead sx={{ backgroundColor: 'background.paper', }}>
                                 <TableRow>
                                     <TableCell>Codigo</TableCell>
                                     <TableCell>Nombre</TableCell>

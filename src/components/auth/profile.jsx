@@ -39,7 +39,7 @@ const Profile = () => {
                     }}
                 >
                     <Paper>
-                        <Grid container item spacing={{ xs: 1, md: 0 }} columns={{ xs: 2, sm: 7, md: 10 }} sx={{ height: 357 }}>
+                        <Grid container item spacing={{ xs: 1, md: 0 }} columns={{ xs: 2, sm: 7, md: 10 }} sx={{ height: 457 }}>
                             <Grid item xs={2} sm={8} md={5}>
                                 <Typography variant="h4" pt={1} pb={1}>
                                     <Button variant='text' onClick={()=>navigate("/")}>
@@ -48,7 +48,7 @@ const Profile = () => {
                                 </Typography>
                                 <Divider></Divider>
                                 <Grid container direction={"column"} justifyContent={"flex-end"}>
-                                    <Paper sx={{ height: 299 }}>
+                                    <Paper sx={{ height: 399 }}>
                                         <MenuList sx={{ display: "grid" }}>
                                             <MenuItem onClick={() => navigate("/profile")}>
                                                 <ListItemIcon>
@@ -69,7 +69,7 @@ const Profile = () => {
                                                 <ListItemText>Opciones Avanzadas</ListItemText>
                                             </MenuItem>
                                             <Divider />
-                                            <MenuItem sx={{ marginTop: 15 }}
+                                            <MenuItem sx={{ marginTop: 28 }}
                                                 onClick={() => {
                                                     setLoading(!Loading)
                                                     Logout()
@@ -90,7 +90,7 @@ const Profile = () => {
 
                             </Grid>
                             <Grid item xs={2} sm={8} md>
-                                <Paper sx={{ height: 358 }}>
+                                <Paper sx={{ height: 458 }}>
                                     <Outlet />
                                 </Paper>
                             </Grid>

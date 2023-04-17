@@ -26,18 +26,6 @@ const Historia = () => {
         }).catch(err => console.log(err))
 
     }
-    const response2 = (id) => {
-        fetch(import.meta.env.VITE_URL + "/Report/"+id, {
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer " + getToken
-            }
-        }).then(res => res.json()).then(data => {
-            console.log(data.data)
-            //test()
-        }).catch(err => console.log(err))
-
-    }
     const test = () => {
         historial.forEach((element) => {
             if (!lista.includes(element.id_compra)) {
@@ -46,12 +34,6 @@ const Historia = () => {
                 lista2.push(element.date)
             }
         });
-    }
-    const test2 = () => {
-        console.log("historial", historial)
-        console.log("lista", lista)
-        //console.log("fecha", lista2)
-        console.log("con fecha", lista2)
     }
     { historial != null ? test() : null }
 
@@ -62,11 +44,11 @@ const Historia = () => {
     return <>
         <Grid sx={{ p: 2 }}>
             <Typography variant="button" sx={{ fontSize: 22 }}>
-                Historial   <Button onClick={test2}>test</Button><Button onClick={response2}>Test2</Button>
+                Historial
             </Typography>
             <Divider></Divider>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <TableContainer sx={{ maxHeight: 258 }}>
+                <TableContainer sx={{ maxHeight: 378 }}>
                     <Table >
                         <TableHead sx={{ backgroundColor: 'background.paper', }}>
                             <TableRow>
