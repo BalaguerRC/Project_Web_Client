@@ -37,9 +37,6 @@ const Perfil = () => {
                 </Typography>
                 <Typography variant="caption" color={"text.secondary"}>{getData.date.substr(0, 10)}</Typography>
             </Grid>
-            {/*historial && historial.map((item)=>{
-                setId({id:item.id_compra})
-            })*/}
         </Grid>
     </>
 }

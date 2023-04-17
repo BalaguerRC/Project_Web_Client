@@ -12,7 +12,7 @@ import { AddCar } from '../car/car';
 const Details = () => {
 
     const { id } = useParams();
-    
+
     const [Product, setProduct] = useState({});
     const [Loading, setLoading] = useState(false);
     const [Loading2, setLoading2] = useState(false);
@@ -323,7 +323,7 @@ const Details = () => {
                                         </Grid>
                                         <Grid item
                                             marginTop={"auto"}
-                                            sx={{ justifyContent: "right", display: "flex", }}>
+                                            sx={{ display: "flex", justifyContent: "right" }}>
                                             {Product.quantity == 0 ?
                                                 (
                                                     <Button
@@ -339,13 +339,8 @@ const Details = () => {
                                                     <Button
                                                         variant="contained"
                                                         size="small"
-                                                        // sx={{backgroundColor: "#7ecfbe"}}
                                                         onClick={() => {
-                                                            //Buy(Product.id, Product.quantity - 1)
-                                                            //CantidadSuma2()
-                                                            //console.log(Cantidad)
                                                             setOpenDialog(true)
-
                                                         }}
                                                     >
                                                         Comprar

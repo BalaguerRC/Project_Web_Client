@@ -9,10 +9,10 @@ const Historia = () => {
     const getData = JSON.parse(localStorage.getItem("DATA"))
     const getToken = localStorage.getItem("Token");
     const [historial, setHistorial] = useState([]);
-    const [newhistorial, setNewHistorial] = useState([{ id: 0, date: "" }]);
 
     let lista = [];
     let lista2 = [];
+
     const response = () => {
         fetch(import.meta.env.VITE_URL + "/Compra2/" + getData.id, {
             method: "GET",
@@ -30,7 +30,6 @@ const Historia = () => {
         historial.forEach((element) => {
             if (!lista.includes(element.id_compra)) {
                 lista.push(element.id_compra);
-                //response2(element.id_compra);
                 lista2.push(element.date)
             }
         });
@@ -40,7 +39,9 @@ const Historia = () => {
     useEffect(() => {
         response();
     }, [])
+    
     const [open, setOpen] = useState(true);
+
     return <>
         <Grid sx={{ p: 2 }}>
             <Typography variant="button" sx={{ fontSize: 22 }}>

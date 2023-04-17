@@ -1,6 +1,6 @@
 import { Box, Button, Card, CardActions, CardContent, Container, Divider, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import ReactToPrint from "react-to-print";
 
 const Bills = () => {
@@ -13,6 +13,8 @@ const Bills = () => {
 
     //let date= new Date();
     const getToken = localStorage.getItem("Token");
+
+    const getData= JSON.parse(localStorage.getItem("DATA"))
 
 
     const response = async () => {
@@ -38,7 +40,7 @@ const Bills = () => {
     }, [])
 
     return <>
-
+        {console.log(getData.name)}
         {compra != 0 ?
             (
                 <Grid container
@@ -47,6 +49,7 @@ const Bills = () => {
                     alignItems={"center"}
                     pt={2}
                 >
+                    {getData.name!=compra[0].userName ? (<Navigate to={"/"} replace={true}/>): null}
                     <Container fixed>
                         <Card ref={FacturaRef} sx={{ m: "auto", background: "white", color: "black", maxWidth: 572 }} >
                             <Grid container direction={"row"} sx={{ backgroundColor: "#bbbbbb", color: "black", p: 3 }}>
@@ -117,13 +120,6 @@ const Bills = () => {
                                                         <TableCell sx={{ color: "black" }}>{item.total}</TableCell>
                                                     </TableRow>
                                                 ))}
-                                                {/* <TableRow>
-                                                <TableCell sx={{ color: "black" }}>{compra.id_product}</TableCell>
-                                                <TableCell sx={{ color: "black" }}>{compra.productName}</TableCell>
-                                                <TableCell sx={{ color: "black" }}>0</TableCell>
-                                                <TableCell sx={{ color: "black" }}>{compra.amount}</TableCell>
-                                                <TableCell sx={{ color: "black" }}>{compra.price}</TableCell>
-                                            </TableRow> */}
                                             </TableBody>
                                         </Table>
                                         <Table>
@@ -157,7 +153,6 @@ const Bills = () => {
                     </CardActions>
                 </Grid>
             ) : null}
-
 
         <ReactToPrint
             content={() => FacturaRef.current}

@@ -23,10 +23,6 @@ const Row = ({ item, date }) => {
 
     const navigate = useNavigate();
 
-    /*useEffect(()=>{
-        response()
-    },[open])*/
-
     return <>
         <TableRow>
             <TableCell>
