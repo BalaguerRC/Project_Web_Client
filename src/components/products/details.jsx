@@ -156,6 +156,7 @@ const Details = () => {
         }
         Post2(report)
     }
+    const [openAlert, setOpenAlert] = useState(false)
     const BuyProduct = (id, name, cantidad, precio, id_user) => {
 
         setTimeout(() => {
@@ -163,10 +164,12 @@ const Details = () => {
             setOpenDialog(false);
             if (CantidadProducto > 1) {
                 Buy(Product.id, Product.quantity - CantidadProducto);
+                setOpenAlert(!openAlert)
             }
             else {
                 Buy(Product.id, Product.quantity - 1);
             }
+
         }, 1500);
 
         const Reportenuevo = {
@@ -401,7 +404,9 @@ const Details = () => {
         <Snackbar open={open} autoHideDuration={2000} onClose={() => setOpen(!open)} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
             <Alert severity="success">Guardado en Carrito</Alert>
         </Snackbar>
-
+        <Snackbar open={openAlert} autoHideDuration={2000} onClose={() => setOpenAlert(!openAlert)} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
+            <Alert severity="success">Comprado </Alert>
+        </Snackbar>
         {/**Dialog */}
         <Dialog
             open={openDialog}

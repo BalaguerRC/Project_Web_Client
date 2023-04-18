@@ -58,7 +58,7 @@ const ListProductCategory = () => {
     const navigate = useNavigate();
 
     return <>
-        <Box sx={{ backgroundColor: "#265c66", flexGrow: 1 }}>
+        <Box sx={{ backgroundColor: "#1F313B", flexGrow: 1 }}>
             <Box sx={{ justifyContent: "center", alignItems: "center", p: 7, margin: "auto", maxWidth: 1100, }}>
 
                 <Grid container spacing={5}>

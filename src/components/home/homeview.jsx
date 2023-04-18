@@ -1,19 +1,22 @@
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
+import { Box, Button, ButtonBase, Container, Grid, Typography, styled } from "@mui/material";
 import ListProductCategory from "./listProductCategory";
+import homeimg from "../../assets/homeimg2.png";
+import { useNavigate } from "react-router-dom";
 
 const HomeView = () => {
+    const navigate = useNavigate();
     return <div >
-        <Box sx={{ alignItems: "center", display: "grid" }}>
-            <Grid container marginTop={35} marginBottom={40} textAlign={"center"}>
-                <Container fixed>
-                    <Typography variant="h5" gutterBottom>Hello there</Typography>
-                    <Typography variant="subtitle1" gutterBottom>Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</Typography>
-                    <Button variant="contained">Go</Button>
-                </Container>
-            </Grid>
-        </Box>
+        <div style={{ backgroundImage: `url(${homeimg})`, backgroundSize:"cover", width: "auto", height: 900}}>
+            <Box sx={{ alignItems: "center", display: "grid", }}>
+                <Grid container marginTop={90} marginBottom={10} textAlign={"center"}>
+                    <Container fixed>
+                        <Button variant="contained" onClick={()=>navigate("products")}>Products</Button>
+                    </Container>
+                </Grid>
+            </Box>
+        </div>
 
-        <ListProductCategory/>
+        <ListProductCategory />
     </div>
 }
 

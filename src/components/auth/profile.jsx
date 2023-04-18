@@ -18,87 +18,77 @@ const Profile = () => {
             localStorage.removeItem("Carrito")
             navigate("/login");
         }, 1500)
-
     }
-
     return <>
-        <Grid
-            container
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            marginTop={2}>
-            <Container fixed>
-                <Box
-                    /*spacing={1}*/
-                    paddingTop={1}
-                    justifyContent="center"
-                    sx={{
-                        margin: "auto",
-                        width: "auto",
-                    }}
-                >
-                    <Paper>
-                        <Grid container item spacing={{ xs: 1, md: 0 }} columns={{ xs: 2, sm: 7, md: 10 }} sx={{ height: 457 }}>
-                            <Grid item xs={2} sm={8} md={5}>
-                                <Typography variant="h4" pt={1} pb={1}>
-                                    <Button variant='text' onClick={()=>navigate("/")}>
-                                        {"< - "}
-                                    </Button>Home
-                                </Typography>
-                                <Divider></Divider>
-                                <Grid container direction={"column"} justifyContent={"flex-end"}>
-                                    <Paper sx={{ height: 399 }}>
-                                        <MenuList sx={{ display: "grid" }}>
-                                            <MenuItem onClick={() => navigate("/profile")}>
-                                                <ListItemIcon>
-                                                    <AccountCircleIcon />
-                                                </ListItemIcon>
-                                                <ListItemText>Perfil</ListItemText>
-                                            </MenuItem>
-                                            <MenuItem onClick={() => navigate("historia")}>
-                                                <ListItemIcon>
-                                                    <HistoryIcon/>
-                                                </ListItemIcon>
-                                                <ListItemText>Historial</ListItemText>
-                                            </MenuItem>
-                                            <MenuItem disabled>
-                                                <ListItemIcon>
-                                                    <SettingsIcon/>
-                                                </ListItemIcon>
-                                                <ListItemText>Opciones Avanzadas</ListItemText>
-                                            </MenuItem>
-                                            <Divider />
-                                            <MenuItem sx={{ marginTop: 28 }}
-                                                onClick={() => {
-                                                    setLoading(!Loading)
-                                                    Logout()
-                                                }}>
 
-                                                <ListItemIcon>
-
-                                                    <LogoutIcon />
-                                                </ListItemIcon>
-                                                <ListItemText>
-                                                    Cerrar sesion
-                                                </ListItemText>
-                                                {Loading ? (<CircularProgress size={20} />) : null}
-                                            </MenuItem>
-                                        </MenuList>
-                                    </Paper>
-                                </Grid>
-
+        <Box sx={{ flexGrow: 1}}
+            paddingTop={1}>
+            <Container>
+                <Paper variant="outlined">
+                    <Grid container spacing={{ xs: 0, md: 0 }} columns={{ xs: 1, sm: 8, md: 0 }} justifyContent={"center"}>
+                        <Grid item xs={2} sm={4} md={4}>
+                            <Typography variant="h4" pt={1} pb={1}>
+                                <Button variant='text' onClick={() => navigate("/")}>
+                                    {"< - "}
+                                </Button>Home
+                            </Typography>
+                            <Divider></Divider>
+                            <Grid container direction={"column"}>
+                                <Paper sx={{ height: 399}}>
+                                    <MenuList sx={{ height: "100%" }}>
+                                        <Grid container direction={"column"} justifyContent={"space-between"} sx={{ height: "100%" }}>
+                                            <Grid item>
+                                                <MenuItem onClick={() => navigate("/profile")}>
+                                                    <ListItemIcon>
+                                                        <AccountCircleIcon />
+                                                    </ListItemIcon>
+                                                    <ListItemText>Perfil</ListItemText>
+                                                </MenuItem>
+                                                <MenuItem onClick={() => navigate("historia")}>
+                                                    <ListItemIcon>
+                                                        <HistoryIcon />
+                                                    </ListItemIcon>
+                                                    <ListItemText>Historial</ListItemText>
+                                                </MenuItem>
+                                                <MenuItem disabled>
+                                                    <ListItemIcon>
+                                                        <SettingsIcon />
+                                                    </ListItemIcon>
+                                                    <ListItemText>Opciones Avanzadas</ListItemText>
+                                                </MenuItem>
+                                                <Divider />
+                                            </Grid>
+                                            <Grid item >
+                                                <MenuItem
+                                                    onClick={() => {
+                                                        setLoading(!Loading)
+                                                        Logout()
+                                                    }}>
+                                                    <ListItemIcon>
+                                                        <LogoutIcon />
+                                                    </ListItemIcon>
+                                                    <ListItemText>
+                                                        Cerrar sesion
+                                                    </ListItemText>
+                                                    {Loading ? (<CircularProgress size={20} />) : null}
+                                                </MenuItem>
+                                            </Grid>
+                                        </Grid>
+                                    </MenuList>
+                                </Paper>
                             </Grid>
+                        </Grid>
+                        <Grid item xs={2} sm={4} md={4}>
                             <Grid item xs={2} sm={8} md>
                                 <Paper sx={{ height: 458 }}>
                                     <Outlet />
                                 </Paper>
                             </Grid>
                         </Grid>
-                    </Paper>
-                </Box>
+                    </Grid>
+                </Paper>
             </Container>
-        </Grid>
+        </Box>
     </>
 }
 

@@ -17,7 +17,6 @@ const Car = () => {
     const response = () => {
         const getCarrito = JSON.parse(localStorage.getItem("Carrito"))
         setCarrito(getCarrito)
-        console.log(carrito2)
     }
     const MaxId = async () => {
         await fetch(import.meta.env.VITE_URL + "/Compra", {
@@ -37,7 +36,6 @@ const Car = () => {
     const getToken = localStorage.getItem("Token");
     const getDataUser = JSON.parse(localStorage.getItem("DATA"))
     const Buy = async (id, quantity) => {
-        console.log("esto es:", id, quantity)
         fetch(import.meta.env.VITE_URL + "/ProductsPag/" + id, {
             method: "PUT",
             headers: {
@@ -49,10 +47,8 @@ const Car = () => {
             })
         }).then(res => res.json()).then(data => {
             if (data.succes === true) {
-                console.log("data es: " + data)
                 response();
             }
-            console.log(data)
         }).catch(err => {
             console.log("Error: " + err)
         })
@@ -79,12 +75,16 @@ const Car = () => {
     {/**only one */ }
 
     const [localId, setlocalId] = useState()
+    const [localName, setlocalName] = useState()
     const [localQuantity, setlocalQuantity] = useState()
-
-    const handleClickOpen2 = (id, quantity) => {
+    const [localPrice, setlocalPrice] = useState()
+    //item.id,item.name,item.quantity, item.price
+    const handleClickOpen2 = (id,name, quantity,price) => {
         if (Carrito != 0) {
             setlocalId(id)
+            setlocalName(name)
             setlocalQuantity(quantity)
+            setlocalPrice(price)
             setOpenDialog(true);
         }
     };
@@ -93,17 +93,26 @@ const Car = () => {
         setTimeout(() => {
             for (let i in carrito2) {
                 if (localId === carrito2[i].id) {
-                    console.log("posicion", i)
-                    console.log("uno igual", carrito2[i])
-                    console.log("esto es id:", localId, " cantidad:", localQuantity)
+                    const datos = {
+                        id_user: getDataUser.id,
+                        id_prod: carrito2[i].id,
+                        prod_name: localName,
+                        quantity: 1,
+                        price: localPrice
+                    }
                     Buy(localId, localQuantity - 1)
-                    setlocalId()
-                    setlocalQuantity()
+                    Reporte(datos)
+                    /*setlocalId()
+                    setlocalQuantity()*/
                     Carrito.splice(i, 1)
-                    console.log(Carrito)
                     localStorage.setItem("Carrito", JSON.stringify(Carrito))
                 }
             }
+            const report = {
+                id_compra: maxID + 1,
+                total_price: `${localPrice}`
+            }
+            Post2(report)
             handleCloseDialog()
             setOpen2(true);
             response();
@@ -151,7 +160,6 @@ const Car = () => {
     const [Loading, setLoading] = useState(false)
     const List = [];
     const Post2 = (report) => {
-        console.log(report)
         fetch(import.meta.env.VITE_URL + "/Report", {
             method: "POST",
             headers: {
@@ -160,7 +168,6 @@ const Car = () => {
             },
             body: JSON.stringify(report)
         }).then(res => res.json()).then(data => {
-            console.log(data)
             localStorage.removeItem("Carrito")
             response();
         }).catch(err => console.log(err))
@@ -184,7 +191,6 @@ const Car = () => {
                 Reporte(datos)
             }, 1000)
         }
-        console.log("lista carrito", List)
         const report = {
             id_compra: maxID + 1,
             total_price: `${PrecioTotal.current}`
@@ -207,7 +213,6 @@ const Car = () => {
 
 
     const Reporte = (datos) => {
-        //console.log("Lista desde reporte:",datos)
         const reporte = {
             id_compra: maxID + 1,
             id_user: datos.id_user,
@@ -225,7 +230,6 @@ const Car = () => {
         setTimeout(() => {
             localStorage.removeItem("Carrito");
             response();
-            console.log("test")
             setLoading2(Loading2 === true)
             Carrito = []
         }, 2000)
@@ -234,9 +238,6 @@ const Car = () => {
     const handleClose = () => {
         setOpen(false);
     };
-    //const PrecioTotal = useRef(0);
-
-
 
     //**SUM */
     var total = 0;
@@ -368,7 +369,7 @@ const Car = () => {
                                             <ProductCarItem id={item.id} name={item.name} price={item.precio} image={item.image} />
 
                                             <CardActions>
-                                                <Button size="small" variant="contained" color="primary" onClick={() => handleClickOpen2(item.id, item.quantity)}>
+                                                <Button size="small" variant="contained" color="primary" onClick={() => handleClickOpen2(item.id,item.name,item.quantity, item.precio)}>
                                                     Comprar
                                                 </Button>
                                                 <Button size="small" variant="outlined" color="primary" startIcon={<Delete />} onClick={() => handleClickOpenDelete(item.id, item.quantity)}>
