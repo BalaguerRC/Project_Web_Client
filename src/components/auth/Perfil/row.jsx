@@ -68,12 +68,13 @@ const Row = ({ item, date }) => {
 
   const navigate = useNavigate();
 
-  /*useEffect(() => {
+  useEffect(() => {
     response2();
-  }, [TotalPri]);*/
-  {
+    console.log("useefect:", item);
+  }, [TotalPri]);
+  /*{
     TotalPri === 0 ? response2() : null;
-  }
+  }*/
 
   return (
     <>

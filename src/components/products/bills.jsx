@@ -88,7 +88,7 @@ const Bills = () => {
               >
                 <Grid item xs>
                   <Typography variant="button" fontSize={18} fontWeight={700}>
-                    Tienda V
+                    Products
                   </Typography>
                   <Typography variant="subtitle2">Albert R.</Typography>
                   <Typography variant="subtitle2">albert@exa.com</Typography>
@@ -145,7 +145,8 @@ const Bills = () => {
                           Hora de compra:
                         </Typography>
                         <Typography variant="subtitle1" fontSize={14}>
-                          {compra[0].date.slice(11, 16)}
+                          {compra[0].date.slice(11, 16)}{" "}
+                          {compra[0].date.slice(11, 13) >= 12 ? "pm" : "am"}
                         </Typography>
                       </Grid>
                     </Grid>

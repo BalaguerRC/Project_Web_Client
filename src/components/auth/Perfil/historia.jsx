@@ -84,7 +84,7 @@ const Historia = () => {
 
   useEffect(() => {
     response();
-  }, []);
+  }, [historial]);
 
   /*const [open, setOpen] = useState(true);*/
   return (
