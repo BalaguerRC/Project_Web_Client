@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Collapse,
   Divider,
   Grid,
@@ -16,14 +17,12 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import Row from "./row";
-/*import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';*/
 
 const Historia = () => {
   const getData = JSON.parse(localStorage.getItem("DATA"));
   const getToken = localStorage.getItem("Token");
   const [historial, setHistorial] = useState([]);
-  const [historialpr, setHistorialPr] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   let lista = [];
   let lista2 = [];
@@ -39,7 +38,6 @@ const Historia = () => {
       .then((res) => res.json())
       .then((data) => {
         setHistorial(data.data);
-        console.log(data.data);
       })
       .catch((err) => console.log(err));
   };
@@ -53,70 +51,77 @@ const Historia = () => {
     });
   };
 
-  /*const fetchReport = (item) => {
-    console.log(item);
-    if (item != 0) {
-      fetch(import.meta.env.VITE_URL + "/Report/" + item, {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + getToken,
-        },
+  const fetchReport = async (item) => {
+    fetch(import.meta.env.VITE_URL + "/Report/" + item, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + getToken,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.data);
+        lista3.push(data.data);
       })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data.data);
-          lista3.push(data.data);
-        })
-        .catch((err) => console.log(err));
+      .catch((err) => console.log(err));
+  };
+
+  const ForEachTest = () => {
+    for (let i in lista) {
+      console.log("idFor:", lista[i]);
+      fetchReport(lista[i]);
     }
-  };*/
+  };
+
   {
     historial != null ? test() : null;
   }
+  const time = () => {
+    setTimeout(() => {
+      setLoading(!loading);
+    }, 1000);
+  };
 
   useEffect(() => {
     response();
-    //response2();
   }, []);
 
-  const [open, setOpen] = useState(true);
-
+  /*const [open, setOpen] = useState(true);*/
   return (
     <>
       <Grid sx={{ p: 2 }}>
         <Typography variant="button" sx={{ fontSize: 22 }}>
           Historial
-          <Button onClick={() => console.log(historialpr)}>Test</Button>
         </Typography>
         <Divider></Divider>
         <Paper sx={{ width: "100%", overflow: "hidden" }}>
-          <TableContainer sx={{ maxHeight: 378 }}>
-            <Table>
-              <TableHead sx={{ backgroundColor: "background.paper" }}>
-                <TableRow>
-                  <TableCell></TableCell>
-                  <TableCell>Codigo de factura</TableCell>
-                  <TableCell>$ Precio Total</TableCell>
-                  <TableCell>Fecha</TableCell>
-                  <TableCell>Hora</TableCell>
-                  <TableCell>Acciones</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {lista &&
-                  lista.map((item, index) => {
-                    return (
-                      <Row
-                        item={item}
-                        price={0}
-                        date={lista2[index]}
-                        key={index}
-                      />
-                    );
-                  })}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          {lista == 0 ? (
+            <Typography variant="subtitle1" pl={1}>
+              Token Expirado
+            </Typography>
+          ) : (
+            <TableContainer sx={{ maxHeight: 378 }}>
+              <Table>
+                <TableHead sx={{ backgroundColor: "background.paper" }}>
+                  <TableRow>
+                    <TableCell></TableCell>
+                    <TableCell># de factura</TableCell>
+                    <TableCell>$ Precio Total</TableCell>
+                    <TableCell>Fecha y Hora</TableCell>
+                    <TableCell>Acciones</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {lista &&
+                    lista.map((item, index) => {
+                      return (
+                        <Row item={item} date={lista2[index]} key={index} />
+                      );
+                    })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
         </Paper>
       </Grid>
     </>

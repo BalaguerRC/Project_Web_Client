@@ -14,13 +14,12 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Row = ({ item, price, date }) => {
+const Row = ({ item, date }) => {
   const [history, setHistory] = useState(false);
   const [open, setOpen] = useState(false);
   const [TotalPri, setTotalPri] = useState(0);
   const getToken = localStorage.getItem("Token");
-
-  let lista3 = [];
+  const [loading, setLoading] = useState(true);
 
   const response = () => {
     fetch(import.meta.env.VITE_URL + "/CompraClient/" + item, {
@@ -32,15 +31,35 @@ const Row = ({ item, price, date }) => {
       .then((resp) => resp.json())
       .then((data) => setHistory(data.data))
       .catch((err) => console.log(err));
-    fetch(import.meta.env.VITE_URL + "/Report/" + item, {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + getToken,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => setTotalPri(data.data))
-      .catch((err) => console.log(err));
+  };
+
+  const response2 = async () => {
+    setTimeout(() => {
+      setLoading(!loading);
+      fetch(import.meta.env.VITE_URL + "/Report/" + item, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + getToken,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => setTotalPri(data.data))
+        .catch((err) => console.log(err));
+    }, 700);
+  };
+  const response3 = async () => {
+    setTimeout(() => {
+      setLoading(!loading);
+      fetch(import.meta.env.VITE_URL + "/Report/" + item, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + getToken,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => setTotalPri(data.data))
+        .catch((err) => console.log(err));
+    }, 500);
   };
 
   if (open) {
@@ -48,6 +67,13 @@ const Row = ({ item, price, date }) => {
   }
 
   const navigate = useNavigate();
+
+  /*useEffect(() => {
+    response2();
+  }, [TotalPri]);*/
+  {
+    TotalPri === 0 ? response2() : null;
+  }
 
   return (
     <>
@@ -62,9 +88,10 @@ const Row = ({ item, price, date }) => {
           </IconButton>
         </TableCell>
         <TableCell>{item}</TableCell>
-        <TableCell>{price}</TableCell>
-        <TableCell>{date.slice(0, 10)}</TableCell>
-        <TableCell>{date.slice(11, 16)}</TableCell>
+        <TableCell>{TotalPri}</TableCell>
+        <TableCell>
+          {date.slice(0, 10)} {date.slice(11, 16)}
+        </TableCell>
         <TableCell>
           <Link
             underline="hover"
