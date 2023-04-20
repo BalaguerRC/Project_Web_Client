@@ -111,7 +111,7 @@ const Historia = () => {
                     <TableCell>Acciones</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody sx={{ backgroundColor: "#1b1e24" }}>
                   {lista &&
                     lista.map((item, index) => {
                       return (
