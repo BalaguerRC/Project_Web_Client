@@ -96,6 +96,7 @@ const Login = () => {
             borderColor: "9C9C9C",
             borderTopWidth: 5,
             background: "#242933",
+            boxShadow: "3px 5px 28px #000000",
           }}
         >
           <Grid
