@@ -44,7 +44,7 @@ const Login = () => {
     } else {
       setTimeout(() => {
         setLoading(false);
-        fetch("http://localhost:5081/api/Users/login", {
+        fetch(import.meta.url.env.VITE_URL+"/Users/login", {
           method: "Post",
           headers: {
             "Content-Type": "application/json",
@@ -129,6 +129,7 @@ const Login = () => {
               required
               id="outlined-required"
               label="Email"
+              type="email"
               fullWidth
             />
             <TextField
