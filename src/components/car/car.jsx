@@ -34,7 +34,7 @@ import ProductCarItem from "./productCarItem";
 import Delete from "@mui/icons-material/Delete";
 import { ButtonCustom, ButtonDeleteCustomOutlined } from "./style/Buttom";
 
-export const Carrito = JSON.parse(localStorage.getItem("Carrito")) || [];
+export let Carrito = JSON.parse(localStorage.getItem("Carrito")) || [];
 
 const Car = () => {
   const [carrito2, setCarrito] = useState([]);
