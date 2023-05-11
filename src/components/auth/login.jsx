@@ -44,7 +44,7 @@ const Login = () => {
     } else {
       setTimeout(() => {
         setLoading(false);
-        fetch(import.meta.url.env.VITE_URL+"/Users/login", {
+        fetch(import.meta.env.VITE_URL+"/Users/login", {
           method: "Post",
           headers: {
             "Content-Type": "application/json",
