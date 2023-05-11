@@ -57,7 +57,7 @@ const Details = () => {
   };
 
   const response = async () => {
-    await fetch("http://localhost:5081/api/Products/" + id, {
+    await fetch(import.meta.env.VITE_URL+"/Products/" + id, {
       method: "GET",
       headers: {
         Authorization: "Bearer " + getToken,
