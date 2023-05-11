@@ -12,6 +12,7 @@ import {
   Snackbar,
   Typography,
 } from "@mui/material";
+import desconocido from "../../assets/signo.png";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import InfoIcon from "@mui/icons-material/Info";
@@ -126,12 +127,12 @@ const ListProductCategory = () => {
                       <img
                         src={`${
                           item.image == null
-                            ? "/src/assets/signo.png"
+                            ? desconocido
                             : item.image
                         }?w=248&fit=crop&auto=format`}
                         srcSet={`${
                           item.image == null
-                            ? "/src/assets/signo.png"
+                            ? desconocido
                             : item.image
                         }?w=248&fit=crop&auto=format&dpr=2 2x`}
                         alt={item.name}
@@ -214,12 +215,12 @@ const ListProductCategory = () => {
                           <img
                             src={`${
                               item.image == null
-                                ? "/src/assets/signo.png"
+                                ? desconocido
                                 : item.image
                             }?w=248&fit=crop&auto=format`}
                             srcSet={`${
                               item.image == null
-                                ? "/src/assets/signo.png"
+                                ? desconocido
                                 : item.image
                             }?w=248&fit=crop&auto=format&dpr=2 2x`}
                             alt={item.name}
@@ -274,12 +275,12 @@ const ListProductCategory = () => {
                           <img
                             src={`${
                               item.image == null
-                                ? "/src/assets/signo.png"
+                                ? desconocido
                                 : item.image
                             }?w=248&fit=crop&auto=format`}
                             srcSet={`${
                               item.image == null
-                                ? "/src/assets/signo.png"
+                                ? desconocido
                                 : item.image
                             }?w=248&fit=crop&auto=format&dpr=2 2x`}
                             alt={item.name}

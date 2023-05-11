@@ -1,5 +1,6 @@
 import { Box, CardActionArea, CardContent, CardMedia, Divider, Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import desconocido from "../../assets/signo.png";
 
 const ProductCarItem = ({ id, name, price, image }) => {
 
@@ -10,7 +11,7 @@ const ProductCarItem = ({ id, name, price, image }) => {
             <CardMedia
                 component="img"
                 height="140"
-                image={image == null ? "/src/assets/signo.png" : image}
+                image={image == null ? desconocido : image}
                 alt="green iguana"
             />
             <CardContent>

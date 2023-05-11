@@ -33,6 +33,7 @@ import {
   Typography,
   styled,
 } from "@mui/material";
+import desconocido from "../../assets/signo.png";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AddCar } from "../car/car";
@@ -304,7 +305,7 @@ const Details = () => {
                         height="428"
                         image={
                           Product.image == null
-                            ? "/src/assets/signo.png"
+                            ? desconocido
                             : Product.image
                         }
                         alt="product"

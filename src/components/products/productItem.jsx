@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import desconocido from "../../assets/signo.png";
 
 const ProductItem = ({ id, name, price, category, image }) => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const ProductItem = ({ id, name, price, category, image }) => {
           <CardMedia
             component="img"
             height="140"
-            image={image == null ? "/src/assets/signo.png" : image}
+            image={image == null ? desconocido : image}
             alt="green iguana"
           />
           <CardContent>
